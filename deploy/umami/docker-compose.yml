@@ -17,8 +17,8 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "127.0.0.1:3001:3000"
-      - "${UMAMI_LAN_IP:?set UMAMI_LAN_IP in .env (the VPN/LAN address to open the dashboard on)}:3001:3000"
+      - "127.0.0.1:3002:3000"
+      - "${UMAMI_LAN_IP:?set UMAMI_LAN_IP in .env (the VPN/LAN address to open the dashboard on)}:3002:3000"
     environment:
       DATABASE_URL: postgresql://umami:${UMAMI_DB_PASSWORD:?set UMAMI_DB_PASSWORD in .env}@db:5432/umami
       APP_SECRET: ${UMAMI_APP_SECRET:?set UMAMI_APP_SECRET in .env}
