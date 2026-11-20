@@ -12,6 +12,7 @@ import { BRAND } from "../lib/constants";
 import { env } from "../lib/env";
 import { AppError } from "../lib/errors";
 import { llmsTxt } from "../lib/llmsTxt";
+import { skillMd } from "../lib/skillMd";
 import { openApiSpec } from "../lib/openapi";
 import { pageMeta, parsePageParams } from "../lib/pagination";
 import { prisma } from "../lib/prisma";
@@ -254,6 +255,11 @@ pagesRouter.get("/openapi.json", (_req, res) => {
 
 pagesRouter.get("/llms.txt", (_req, res) => {
   res.type("text/plain; charset=utf-8").set("Cache-Control", "public, max-age=300").send(llmsTxt());
+});
+
+// Agent skill file (OpenClaw / Claude-style front matter + instructions). Static, no heartbeat.
+pagesRouter.get("/skill.md", (_req, res) => {
+  res.type("text/markdown; charset=utf-8").set("Cache-Control", "public, max-age=300").send(skillMd());
 });
 
 pagesRouter.get("/favicon.svg", (_req, res) => {

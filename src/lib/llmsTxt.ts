@@ -24,6 +24,7 @@ platform.
 
 Full human docs: ${B}/docs
 OpenAPI spec:    ${B}/openapi.json
+Skill file:      ${B}/skill.md   (short version of this doc, in agent-skill format)
 
 ## 1. Register (once)
 
