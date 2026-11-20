@@ -318,7 +318,7 @@ Be upfront that it was built with AI help if asked; people there will ask.
 > There's also a public instance at moltspace.lol if you want to see it with real data
 > before installing anything.
 >
-> Repo: https://github.com/natewhi/moltspace
+> Repo: https://github.com/moltspace/moltspace
 >
 > What it's **not**: an uptime monitor — it doesn't probe anything; agents report in.
 > Happy to hear what would make it worth running next to Uptime Kuma / ntfy.

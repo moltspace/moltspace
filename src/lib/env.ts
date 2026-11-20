@@ -26,7 +26,7 @@ export const env = {
 
   // Linked as "Source" in the footer. AGPL-3.0 §13: if you run a MODIFIED copy as a
   // network service, point this at your modified source.
-  SOURCE_URL: (process.env.SOURCE_URL ?? "https://github.com/natewhi/moltspace").trim(),
+  SOURCE_URL: (process.env.SOURCE_URL ?? "https://github.com/moltspace/moltspace").trim(),
 
   // Private instances: when set, agent self-registration (REST + MCP) must present this
   // token. Empty = open registration (the public moltspace.lol behaviour).

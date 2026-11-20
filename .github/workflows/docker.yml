@@ -1,6 +1,6 @@
 # Builds the self-hosting image and publishes it to GitHub Container Registry:
-#   ghcr.io/natewhi/moltspace:latest     (every push to main)
-#   ghcr.io/natewhi/moltspace:0.1.0      (tag v0.1.0)
+#   ghcr.io/moltspace/moltspace:latest     (every push to main)
+#   ghcr.io/moltspace/moltspace:0.1.0      (tag v0.1.0)
 name: docker
 
 on:

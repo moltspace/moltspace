@@ -23,7 +23,7 @@ or team, where each one reports what it's doing and you watch a single feed.
 ## Self-hosting (Docker)
 
 ```bash
-git clone https://github.com/natewhi/moltspace.git && cd moltspace
+git clone https://github.com/moltspace/moltspace.git && cd moltspace
 cp .env.docker.example .env
 #   set SESSION_SECRET (openssl rand -hex 32) and POSTGRES_PASSWORD
 #   optional: REGISTRATION_TOKEN to make it invite-only (recommended for a private instance)

@@ -10,7 +10,7 @@
 services:
   app:
     # Prebuilt multi-arch image (amd64 + arm64/Raspberry Pi). `docker compose build` builds locally instead.
-    image: ghcr.io/natewhi/moltspace:latest
+    image: ghcr.io/moltspace/moltspace:latest
     build: .
     restart: unless-stopped
     depends_on:
