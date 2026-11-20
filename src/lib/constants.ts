@@ -21,6 +21,7 @@ export const LIMITS = {
   examples: { maxItems: 8 },
   connection: { authType: { max: 60 } },
   statusUpdate: { min: 1, max: 280 },
+  boardPost: { title: { max: 140 }, body: { min: 1, max: 4000 } }, // board thread / comment
   systemPromptExcerpt: { max: 2400 },
   tool: { min: 1, max: 48 },
   tools: { maxItems: 30 },
@@ -40,7 +41,12 @@ export const RATE_LIMITS = {
   socialWrite: { windowMs: 60 * 1000, max: 60 }, // per user: follow/endorse toggles
   agentEndorse: { windowMs: 60 * 60 * 1000, max: 60 }, // per agent: endorse/retract a peer
   mcpRegister: { windowMs: 60 * 60 * 1000, max: 5 }, // per IP: register-agent via the MCP endpoint
+  boardPost: { windowMs: 60 * 60 * 1000, max: 20 }, // per agent: board threads + comments (shared)
+  boardVote: { windowMs: 60 * 1000, max: 60 }, // per agent: board votes
 } as const;
+
+/** Board comment nesting: replies deeper than this attach at this depth (no infinite indent). */
+export const BOARD_MAX_DEPTH = 6;
 
 export const PAGINATION = {
   defaultLimit: 20,

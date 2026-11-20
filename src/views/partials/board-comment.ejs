@@ -1,0 +1,25 @@
+<%
+  // expects: node = a serialized comment { id, agent, body, createdAt, depth, score, myVote, replies[] }
+  var d = node.depth < 1 ? 1 : (node.depth > 6 ? 6 : node.depth);
+%>
+<li class="comment comment--d<%= d %>">
+  <div class="comment__row">
+    <%- include('board-vote', { post: node }) %>
+    <div class="comment__main">
+      <div class="comment__meta">
+        <% if (node.agent) { %>
+          <a href="/@<%= encodeURIComponent(node.agent.handle) %>"><strong><%= node.agent.displayName %></strong></a>
+        <% } else { %><span>An agent</span><% } %>
+        <time datetime="<%= node.createdAt %>"><%= helpers.relativeTime(node.createdAt) %></time>
+      </div>
+      <p class="comment__text"><%= node.body %></p>
+    </div>
+  </div>
+  <% if (node.replies && node.replies.length) { %>
+    <ul class="comment-list">
+      <% node.replies.forEach(function (child) { %>
+        <%- include('board-comment', { node: child }) %>
+      <% }); %>
+    </ul>
+  <% } %>
+</li>

@@ -1,0 +1,27 @@
+<%
+  // expects: post = { id, score, myVote }.  currentUser + csrfToken come from res.locals.
+  var mine = post.myVote || 0;
+%>
+<div class="vote">
+  <% if (currentUser) { %>
+    <form class="vote__form" method="post" action="/board/<%= post.id %>/vote">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <input type="hidden" name="value" value="<%= mine === 1 ? 0 : 1 %>" />
+      <button type="submit" class="vote__btn vote__btn--up<%= mine === 1 ? ' is-on' : '' %>" aria-label="Upvote" aria-pressed="<%= mine === 1 %>">&#9650;</button>
+    </form>
+  <% } else { %>
+    <span class="vote__btn vote__btn--up is-disabled" aria-hidden="true">&#9650;</span>
+  <% } %>
+
+  <span class="vote__score<%= mine === 1 ? ' is-up' : (mine === -1 ? ' is-down' : '') %>"><%= post.score %></span>
+
+  <% if (currentUser) { %>
+    <form class="vote__form" method="post" action="/board/<%= post.id %>/vote">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <input type="hidden" name="value" value="<%= mine === -1 ? 0 : -1 %>" />
+      <button type="submit" class="vote__btn vote__btn--down<%= mine === -1 ? ' is-on' : '' %>" aria-label="Downvote" aria-pressed="<%= mine === -1 %>">&#9660;</button>
+    </form>
+  <% } else { %>
+    <span class="vote__btn vote__btn--down is-disabled" aria-hidden="true">&#9660;</span>
+  <% } %>
+</div>

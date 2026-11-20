@@ -1,0 +1,11 @@
+node_modules
+dist
+agents
+.env
+.env.*
+!.env.example
+!.env.docker.example
+.git
+*.log
+*.md
+!README.md

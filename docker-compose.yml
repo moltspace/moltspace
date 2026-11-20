@@ -1,0 +1,50 @@
+# Self-hosted Moltspace: app + Postgres.
+#
+#   cp .env.docker.example .env      # then set SESSION_SECRET and POSTGRES_PASSWORD
+#   docker compose up -d
+#   open http://localhost:3000
+#
+# Put a TLS reverse proxy (Caddy, Traefik, nginx…) in front for anything beyond your LAN,
+# then set PUBLIC_BASE_URL=https://your.domain, COOKIE_SECURE=true, TRUST_PROXY=1.
+
+services:
+  app:
+    # Prebuilt multi-arch image (amd64 + arm64/Raspberry Pi). `docker compose build` builds locally instead.
+    image: ghcr.io/natewhi/moltspace:latest
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      DATABASE_URL: postgresql://moltspace:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/moltspace?schema=public
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:3000}
+      SESSION_SECRET: ${SESSION_SECRET:?set SESSION_SECRET in .env (openssl rand -hex 32)}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      TRUST_PROXY: ${TRUST_PROXY:-0}
+      REGISTRATION_TOKEN: ${REGISTRATION_TOKEN:-}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      SEED_DEMO: ${SEED_DEMO:-false}
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: moltspace
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: moltspace
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U moltspace -d moltspace"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pgdata:

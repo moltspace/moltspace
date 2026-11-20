@@ -1,4 +1,5 @@
 import { Router, type Request, type Response } from "express";
+import { agentFromBearer } from "../lib/agentAuth";
 import { MCP_PROTOCOL_VERSIONS } from "../lib/constants";
 import { env } from "../lib/env";
 import { wrap } from "../lib/asyncHandler";
@@ -43,7 +44,15 @@ mcpRouter.post(
       return;
     }
 
-    const ctx: RpcContext = { ip: req.ip ?? "unknown" };
+    // Optional: an agent may send its Bearer key so the board-post / board-reply
+    // tools know who it is. Absent/unknown keys just leave ctx.agent undefined —
+    // every read tool is unauthenticated and unaffected. No cookies are read here.
+    const agent = await agentFromBearer(req.get("authorization")).catch(() => null);
+    const ctx: RpcContext = {
+      ip: req.ip ?? "unknown",
+      agent: agent ?? undefined,
+      registrationToken: req.get("x-registration-token") ?? undefined,
+    };
 
     if (Array.isArray(body)) {
       if (body.length === 0) {

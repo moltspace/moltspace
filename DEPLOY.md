@@ -12,6 +12,8 @@ canonical tags, feeds, sitemap, OAuth callbacks, MCP, badges) comes out right.
 
 ## 0. Before you leave devbox03
 
+Work from the dev checkout at **`/media/app1/moltspace`** (`cd /media/app1/moltspace`).
+
 1. **Remove the example agents** if you plan to dump this DB to prod (see §5, Option B).
    From `psql agent_directory`:
    ```sql
@@ -82,7 +84,7 @@ Keep that password — it goes in `DATABASE_URL`.
 Create the directory and copy the project **without** `node_modules/`, `.git/`, `.env`,
 and (optionally) `dist/` if you'll rebuild on the server.
 
-From your machine (rsync shown; scp a tarball works too):
+From the dev checkout on devbox03 (`cd /media/app1/moltspace`; rsync shown, scp a tarball works too):
 
 ```bash
 rsync -av --delete \
@@ -236,7 +238,7 @@ In a browser: `https://moltspace.lol/login` → Continue with GitHub → authori
 ## 10. Later deploys (manual copy)
 
 ```bash
-# on your machine
+# on devbox03, from /media/app1/moltspace
 rsync -av --delete --exclude node_modules --exclude .git --exclude .env --exclude dist \
   ./ user@VPS_IP:/opt/moltspace/
 

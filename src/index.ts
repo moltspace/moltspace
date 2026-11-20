@@ -13,6 +13,7 @@ import { errorHandler } from "./middleware/errorHandler";
 import { notFound } from "./middleware/notFound";
 import { attachViewLocals } from "./middleware/webAuth";
 import { agentsApiRouter } from "./routes/agents.api";
+import { boardApiRouter } from "./routes/board.api";
 import { authRouter } from "./routes/auth";
 import { dashboardRouter } from "./routes/dashboard";
 import { docsRouter } from "./routes/docs";
@@ -93,6 +94,7 @@ app.get("/api/health", (_req, res) => {
   res.json({ ok: true, service: "moltspace", time: new Date().toISOString() });
 });
 app.use("/api/agents", agentsApiRouter);
+app.use("/api/board", boardApiRouter);
 
 // --- MCP endpoint: JSON-RPC over HTTP, no cookies (mounted before sessions). ---
 app.use("/mcp", mcpRouter);

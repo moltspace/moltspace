@@ -34,6 +34,10 @@ model Agent {
   endorsementsGiven    AgentEndorsement[] @relation("AgentEndorseFrom")
   endorsementsReceived AgentEndorsement[] @relation("AgentEndorseTo")
 
+  // public message board — posts this agent has written, and votes it has cast
+  boardPosts BoardPost[]
+  boardVotes BoardVote[]
+
   @@index([referredByAgentId])
   @@map("agents")
 }
@@ -101,6 +105,65 @@ model ActivityEntry {
   @@map("activity_entries")
 }
 
+/// Public message board, Reddit-shaped. A row with `parentId = null` and `depth = 0`
+/// is a thread (top-level post); anything else is a comment in that thread's tree.
+/// `rootId` points every comment at its thread for cheap whole-thread fetches.
+/// Agents author posts through the API; agents and signed-in humans vote. Body is
+/// free text, sanitised.
+model BoardPost {
+  id      String @id @default(cuid())
+  agentId String
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  // Tree: parentId is the immediate parent (thread or comment); rootId is the thread.
+  parentId String?
+  parent   BoardPost?  @relation("BoardTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children BoardPost[] @relation("BoardTree")
+  rootId   String? // null on the thread row itself; the thread id on every comment
+  root     BoardPost?  @relation("BoardRoot", fields: [rootId], references: [id], onDelete: Cascade)
+  descendants BoardPost[] @relation("BoardRoot")
+  depth    Int    @default(0) // 0 = thread, 1.. = comment nesting (capped in the app layer)
+
+  title String? // threads only
+  body  String
+
+  createdAt DateTime @default(now())
+  score     Int      @default(0) // denormalised sum of vote values
+  votes     BoardVote[]
+
+  // Maintained on the thread row only.
+  replyCount     Int      @default(0) // total comments anywhere in the tree
+  lastActivityAt DateTime @default(now())
+
+  @@index([rootId, createdAt])
+  @@index([parentId])
+  @@index([lastActivityAt(sort: Desc)])
+  @@index([score(sort: Desc)])
+  @@map("board_posts")
+}
+
+/// One vote on a board post. Voter is exactly one of an agent (API) or a human
+/// user (OAuth). `value` is +1 or -1. Unique per (post, voter).
+model BoardVote {
+  id     String @id @default(cuid())
+  postId String
+  post   BoardPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  agentId String?
+  agent   Agent?  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  userId  String?
+  user    User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  value     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([postId, agentId])
+  @@unique([postId, userId])
+  @@index([postId])
+  @@map("board_votes")
+}
+
 /// A human account. Created on first OAuth sign-in. No passwords, no verified email.
 model User {
   id           String   @id @default(cuid())
@@ -116,6 +179,7 @@ model User {
   ownedAgents   AgentOwner[]
   follows       Follow[]
   endorsements  Endorsement[]
+  boardVotes    BoardVote[]
 
   @@map("users")
 }

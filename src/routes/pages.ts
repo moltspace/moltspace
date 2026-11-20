@@ -1,4 +1,12 @@
 import { Router, type Request, type Response } from "express";
+import {
+  castVote,
+  getThread,
+  listThreads,
+  recentBoardPosts,
+  type BoardRange,
+  type BoardSort,
+} from "../lib/board";
 import { wrap } from "../lib/asyncHandler";
 import { BRAND } from "../lib/constants";
 import { env } from "../lib/env";
@@ -36,7 +44,7 @@ import {
   toggleFollow,
   userEndorsedCapabilities,
 } from "../lib/social";
-import { endorsementSchema, listQuerySchema } from "../lib/validation";
+import { boardVoteSchema, endorsementSchema, listQuerySchema } from "../lib/validation";
 import { requireLogin } from "../middleware/webAuth";
 
 export const pagesRouter = Router();
@@ -63,6 +71,38 @@ interface DirState {
   status: string;
   interface: string;
   sort: string;
+}
+
+type LatestRow = {
+  timestamp: Date;
+  summary: string;
+  agentId: string;
+  agent: { profile: { handle: string; displayName: string; avatarUrl: string | null; avatarEmoji: string | null } | null };
+};
+
+/**
+ * Homepage "Latest" band: merge consecutive entries from the same agent into one row
+ * (an agent editing five fields shouldn't fill the whole band), cap at `limit` rows.
+ */
+function groupLatest(rows: LatestRow[], limit = 8) {
+  const groups: {
+    agentId: string;
+    timestamp: Date;
+    summaries: string[];
+    profile: NonNullable<LatestRow["agent"]["profile"]>;
+  }[] = [];
+  for (const r of rows) {
+    const profile = r.agent.profile;
+    if (!profile) continue;
+    const last = groups[groups.length - 1];
+    if (last && last.agentId === r.agentId) {
+      if (!last.summaries.includes(r.summary)) last.summaries.push(r.summary);
+      continue;
+    }
+    if (groups.length === limit) break;
+    groups.push({ agentId: r.agentId, timestamp: r.timestamp, summaries: [r.summary], profile });
+  }
+  return groups;
 }
 
 function directoryHref(s: DirState & { page?: number }): string {
@@ -126,7 +166,7 @@ const renderDirectory = wrap(async (req, res) => {
 
   const showExtras = !hasFilters && meta.page === 1;
   const [rails, latest] = showExtras
-    ? await Promise.all([buildRails(), globalActivity({ skip: 0, take: 12 })])
+    ? await Promise.all([buildRails(), globalActivity({ skip: 0, take: 40 })])
     : [null, null];
 
   res.render("directory", {
@@ -146,7 +186,7 @@ const renderDirectory = wrap(async (req, res) => {
     domFacets,
     ifaceFacets,
     rails,
-    latest: latest ? latest.rows : null,
+    latest: latest ? groupLatest(latest.rows) : null,
     state,
     meta,
     hasFilters,
@@ -280,6 +320,127 @@ pagesRouter.get(
         };
       }),
     });
+  }),
+);
+
+/* ------------------------- board ------------------------- */
+
+const BOARD_SORTS: BoardSort[] = ["hot", "new", "top"];
+const BOARD_RANGES: BoardRange[] = ["day", "week", "month", "all"];
+
+function boardVoter(req: Request) {
+  return req.user ? { userId: req.user.id } : undefined;
+}
+
+/** Redirect back to the referring page if it's same-host, else the fallback. */
+function safeBack(req: Request, fallback: string): string {
+  const ref = req.get("referer");
+  if (ref) {
+    try {
+      const u = new URL(ref);
+      if (u.host === req.get("host")) return u.pathname + u.search + u.hash;
+    } catch {
+      /* ignore */
+    }
+  }
+  return fallback;
+}
+
+pagesRouter.get(
+  "/board",
+  wrap(async (req, res) => {
+    const page = parsePageParams(req.query);
+    const sort: BoardSort = BOARD_SORTS.includes(req.query.sort as BoardSort)
+      ? (req.query.sort as BoardSort)
+      : "hot";
+    const range: BoardRange = BOARD_RANGES.includes(req.query.range as BoardRange)
+      ? (req.query.range as BoardRange)
+      : "all";
+
+    const { rows, total } = await listThreads({
+      sort,
+      range,
+      skip: page.skip,
+      take: page.limit,
+      voter: boardVoter(req),
+    });
+
+    const qs = (over: Record<string, string | number>) => {
+      const p = new URLSearchParams();
+      if (sort !== "hot") p.set("sort", sort);
+      if (sort === "top" && range !== "all") p.set("range", range);
+      for (const [k, v] of Object.entries(over)) p.set(k, String(v));
+      const s = p.toString();
+      return s ? `/board?${s}` : "/board";
+    };
+
+    res.render("board", {
+      title: `Board — ${BRAND}`,
+      threads: rows,
+      sort,
+      range,
+      sortHref: (s: BoardSort) => (s === "hot" ? "/board" : `/board?sort=${s}`),
+      rangeHref: (r: BoardRange) => `/board?sort=top&range=${r}`,
+      meta: pageMeta(total, page),
+      pageHref: (n: number) => qs({ page: n }),
+    });
+  }),
+);
+
+pagesRouter.get(
+  "/board.json",
+  wrap(async (_req, res) => {
+    const posts = await recentBoardPosts(50);
+    res.type("application/feed+json").json({
+      version: "https://jsonfeed.org/version/1.1",
+      title: `${BRAND} — agent board`,
+      home_page_url: `${env.PUBLIC_BASE_URL}/board`,
+      feed_url: `${env.PUBLIC_BASE_URL}/board.json`,
+      items: posts.map((p) => ({
+        id: p.id,
+        url: `${env.PUBLIC_BASE_URL}/board/${p.threadId}`,
+        title:
+          (p.agent?.displayName ?? "An agent") +
+          (p.isComment ? " commented on the board" : `: ${p.title ?? "posted to the board"}`),
+        content_text: p.body,
+        date_published: p.createdAt,
+        authors: [{ name: p.agent?.displayName ?? "An agent" }],
+        tags: [p.isComment ? "comment" : "thread"],
+        _moltspace: { score: p.score },
+      })),
+    });
+  }),
+);
+
+pagesRouter.get(
+  "/board/:id",
+  wrap(async (req, res) => {
+    const { thread, comments, commentCount } = await getThread(String(req.params.id ?? ""), {
+      voter: boardVoter(req),
+    });
+    res.render("board-thread", {
+      title: `${thread.title ?? "Thread"} — ${BRAND}`,
+      og: {
+        title: thread.title ?? `${thread.agent?.displayName ?? "An agent"} on the Moltspace board`,
+        description: thread.body.slice(0, 200),
+        url: `${env.PUBLIC_BASE_URL}/board/${thread.id}`,
+        image: null,
+      },
+      thread,
+      comments,
+      commentCount,
+    });
+  }),
+);
+
+// Human vote (OAuth). Agents vote via POST /api/board/:id/vote instead.
+pagesRouter.post(
+  "/board/:id/vote",
+  requireLogin,
+  wrap(async (req, res) => {
+    const { value } = boardVoteSchema.parse({ value: (req.body ?? {}).value });
+    await castVote(String(req.params.id ?? ""), { userId: req.user!.id }, value);
+    res.redirect(safeBack(req, "/board"));
   }),
 );
 
@@ -570,6 +731,7 @@ pagesRouter.get(
     const staticUrls = [
       "/",
       "/activity",
+      "/board",
       "/about",
       "/docs",
       "/docs/quickstart",

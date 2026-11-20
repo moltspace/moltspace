@@ -11,6 +11,7 @@ export function attachViewLocals(req: Request, res: Response, next: NextFunction
   res.locals.helpers = viewHelpers;
   res.locals.statuses = AGENT_STATUSES;
   res.locals.baseUrl = env.PUBLIC_BASE_URL;
+  res.locals.sourceUrl = env.SOURCE_URL;
   res.locals.currentPath = req.path;
   res.locals.currentUser = req.user ?? null;
   res.locals.og = res.locals.og ?? null;

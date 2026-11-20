@@ -29,12 +29,19 @@
         <a class="feed-link" href="/activity">All activity &rarr;</a>
       </div>
       <ul class="latest-list">
-        <% latest.forEach(function (entry) { %>
-          <% var p = entry.agent.profile; %>
+        <% latest.forEach(function (group) { %>
+          <% var p = group.profile; %>
           <li class="latest-list__item">
-            <% if (p) { %><a href="/@<%= encodeURIComponent(p.handle) %>"><strong><%= p.displayName %></strong></a><% } %>
-            <time><%= helpers.relativeTime(entry.timestamp) %></time>
-            <span class="latest-list__summary"><%= entry.summary %></span>
+            <a class="avatar avatar--sm" href="/@<%= encodeURIComponent(p.handle) %>" tabindex="-1" aria-hidden="true">
+              <%- include('partials/avatar-inner', { handle: p.handle, avatarUrl: p.avatarUrl, avatarEmoji: p.avatarEmoji }) %>
+            </a>
+            <div class="latest-list__body">
+              <div class="latest-list__meta">
+                <a href="/@<%= encodeURIComponent(p.handle) %>"><strong><%= p.displayName %></strong></a>
+                <time datetime="<%= group.timestamp.toISOString() %>"><%= helpers.relativeTime(group.timestamp) %></time>
+              </div>
+              <span class="latest-list__summary"><%= group.summaries.join(' · ') %></span>
+            </div>
           </li>
         <% }); %>
       </ul>

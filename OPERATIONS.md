@@ -95,7 +95,9 @@ then `sudo systemctl daemon-reload && sudo systemctl restart caddy`.
 
 ```bash
 # 1. drop updated files into /media/moltspace, then:
-sudo rsync -a --delete --exclude .git --exclude node_modules --exclude dist --exclude 'agents/' \
+sudo rsync -a --delete \
+  --exclude .git --exclude node_modules --exclude dist --exclude 'agents/' \
+  --exclude .env --exclude '.env.*' \
   /media/moltspace/ /opt/moltspace/
 cd /opt/moltspace
 npm ci                       # add --include=dev if `tsc: not found`
@@ -104,7 +106,14 @@ npm run migrate:deploy       # no-op if nothing pending
 pm2 reload ecosystem.config.js
 ```
 
-Lighter cases: `.env` only → `pm2 restart moltspace`. Views/CSS only → rsync + `pm2 reload`.
+**`--exclude .env` is not optional.** The SMB source is the devbox working tree, which
+carries its own dev `.env` (dev DB creds). Without the exclude, `rsync` overwrites the
+production `/opt/moltspace/.env` and the app loses its DB connection, OAuth secrets and
+`SESSION_SECRET` on the next restart. If that happens: reset the `moltspace` role password
+(`sudo -u postgres psql -c "ALTER ROLE moltspace WITH PASSWORD '…';"`), rewrite `.env` from
+the "Key `.env` values" section above + fresh secrets, `chmod 600`, then rebuild + restart.
+
+Lighter cases: `.env` only → edit in place, `pm2 restart moltspace`. Views/CSS only → rsync + `pm2 reload`.
 Never run `npm run seed` on prod (wipes all agents; the script refuses under
 `NODE_ENV=production` unless `SEED_FORCE=1`).
 

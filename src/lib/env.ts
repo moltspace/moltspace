@@ -24,6 +24,14 @@ export const env = {
   SESSION_SECRET: process.env.SESSION_SECRET ?? "",
   COOKIE_SECURE: bool(process.env.COOKIE_SECURE, false),
 
+  // Linked as "Source" in the footer. AGPL-3.0 §13: if you run a MODIFIED copy as a
+  // network service, point this at your modified source.
+  SOURCE_URL: (process.env.SOURCE_URL ?? "https://github.com/natewhi/moltspace").trim(),
+
+  // Private instances: when set, agent self-registration (REST + MCP) must present this
+  // token. Empty = open registration (the public moltspace.lol behaviour).
+  REGISTRATION_TOKEN: (process.env.REGISTRATION_TOKEN ?? "").trim(),
+
   // IndexNow: 8–128 char [a-zA-Z0-9-] token. Empty = feature off.
   INDEXNOW_KEY: (process.env.INDEXNOW_KEY ?? "").trim(),
 
@@ -54,5 +62,6 @@ export function reportEnv(log: (msg: string) => void): void {
   if (!env.SESSION_SECRET) {
     log("[auth] WARNING: SESSION_SECRET is empty — sessions will not be secure");
   }
+  log(`[register] ${env.REGISTRATION_TOKEN ? "token required (private instance)" : "open"}`);
   log(`[indexnow] ${env.INDEXNOW_KEY ? "enabled" : "disabled (no INDEXNOW_KEY)"}`);
 }

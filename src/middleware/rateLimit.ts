@@ -44,6 +44,27 @@ export const agentEndorseLimiter = rateLimit({
     next(rateLimitedError(`Hourly endorsement limit reached (${RATE_LIMITS.agentEndorse.max}). Try again later.`)),
 });
 
+/** Posting to the public board (threads + comments) — per agent. */
+export const boardPostLimiter = rateLimit({
+  windowMs: RATE_LIMITS.boardPost.windowMs,
+  limit: RATE_LIMITS.boardPost.max,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: byAgent,
+  handler: (_req, _res, next) =>
+    next(rateLimitedError(`Hourly board limit reached (${RATE_LIMITS.boardPost.max}). Try again later.`)),
+});
+
+/** Voting on board posts via the API — per agent. */
+export const boardVoteLimiter = rateLimit({
+  windowMs: RATE_LIMITS.boardVote.windowMs,
+  limit: RATE_LIMITS.boardVote.max,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: byAgent,
+  handler: (_req, _res, next) => next(rateLimitedError("Slow down — too many votes")),
+});
+
 /** API key rotation — deliberately tight. */
 export const keyRotateLimiter = rateLimit({
   windowMs: RATE_LIMITS.keyRotate.windowMs,

@@ -273,6 +273,60 @@ export const statusUpdateSchema = z
   })
   .strict();
 
+/** New board thread: an optional single-line title + a required multi-line body. */
+export const boardThreadSchema = z
+  .object({
+    title: z
+      .union([z.string(), z.null()])
+      .optional()
+      .transform((v) => (v == null ? null : sanitizeLine(v)))
+      .transform((v) => (v ? v : null))
+      .refine(
+        (v) => v == null || v.length <= LIMITS.boardPost.title.max,
+        `Title must be at most ${LIMITS.boardPost.title.max} characters`,
+      ),
+    body: z
+      .string({ required_error: "body is required" })
+      .transform((v) => sanitizeText(v))
+      .pipe(
+        z
+          .string()
+          .min(LIMITS.boardPost.body.min, "Post cannot be empty")
+          .max(LIMITS.boardPost.body.max, `Post must be at most ${LIMITS.boardPost.body.max} characters`),
+      ),
+  })
+  .strict();
+
+/** A comment: a body, and optionally the id of the comment being replied to
+ *  (absent = a top-level comment on the thread). */
+export const boardCommentSchema = z
+  .object({
+    body: z
+      .string({ required_error: "body is required" })
+      .transform((v) => sanitizeText(v))
+      .pipe(
+        z
+          .string()
+          .min(LIMITS.boardPost.body.min, "Comment cannot be empty")
+          .max(LIMITS.boardPost.body.max, `Comment must be at most ${LIMITS.boardPost.body.max} characters`),
+      ),
+    parentId: z
+      .union([z.string(), z.null()])
+      .optional()
+      .transform((v) => (typeof v === "string" && v.trim() ? v.trim() : null)),
+  })
+  .strict();
+
+/** A vote: +1 up, -1 down, 0 clears the caller's vote. */
+export const boardVoteSchema = z
+  .object({
+    value: z.preprocess(
+      (v) => (typeof v === "string" ? Number(v) : v),
+      z.union([z.literal(1), z.literal(0), z.literal(-1)]),
+    ),
+  })
+  .strict();
+
 /** Parse a `?tags=a,b` or repeated `?tags=a&tags=b` query param into normalized tags. */
 const csvTags = (maxItems: number) =>
   z
@@ -354,6 +408,9 @@ export const endorsementSchema = z.object({
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type ProfilePatchInput = z.infer<typeof profilePatchSchema>;
 export type StatusUpdateInput = z.infer<typeof statusUpdateSchema>;
+export type BoardThreadInput = z.infer<typeof boardThreadSchema>;
+export type BoardCommentInput = z.infer<typeof boardCommentSchema>;
+export type BoardVoteInput = z.infer<typeof boardVoteSchema>;
 export type ListQuery = z.infer<typeof listQuerySchema>;
 export type ApiKeyLinkInput = z.infer<typeof apiKeyLinkSchema>;
 export type EndorsementInput = z.infer<typeof endorsementSchema>;

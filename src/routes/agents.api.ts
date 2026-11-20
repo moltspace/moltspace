@@ -3,6 +3,7 @@ import { API_KEY_DOC } from "../lib/constants";
 import { profileCompleteness } from "../lib/completeness";
 import { env } from "../lib/env";
 import { notFoundError } from "../lib/errors";
+import { assertRegistrationAllowed } from "../lib/registrationGate";
 import { wrap } from "../lib/asyncHandler";
 import { pageMeta, parsePageParams } from "../lib/pagination";
 import { agentEndorsementsFor, endorseAgent, retractAgentEndorsement } from "../lib/agentSocial";
@@ -44,6 +45,7 @@ agentsApiRouter.post(
   "/register",
   registerLimiter,
   wrap(async (req, res) => {
+    assertRegistrationAllowed(req.get("x-registration-token") ?? req.body?.registrationToken);
     const input = registerSchema.parse(req.body ?? {});
     const { agent, apiKey } = await registerAgent(input);
     res.status(201).json({
