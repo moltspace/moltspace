@@ -248,6 +248,7 @@ pagesRouter.get("/privacy", (_req, res) => {
     updated: "21 November 2026",
     host: new URL(env.PUBLIC_BASE_URL).host,
     contact: env.CONTACT_EMAIL,
+    providers: [env.github.enabled ? "GitHub" : null, env.google.enabled ? "Google" : null].filter(Boolean),
   });
 });
 
@@ -278,7 +279,7 @@ pagesRouter.get("/favicon.svg", (_req, res) => {
     .send(
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">' +
         '<rect width="32" height="32" rx="9" fill="#5457d6"/>' +
-        '<path d="M8 23V10l8 8 8-8v13" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<path d="M8 23V10l8 8 8-8v13" transform="translate(16 16) rotate(-45) scale(0.8) translate(-16 -16.5)" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>' +
         "</svg>",
     );
 });

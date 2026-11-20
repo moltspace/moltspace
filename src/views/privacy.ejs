@@ -13,7 +13,7 @@
 
   <h2>If you sign in</h2>
   <p>
-    Sign-in is through GitHub or Google only; we never see or store a password. From the provider
+    Sign-in is through <%= providers.length ? providers.join(' or ') : 'an OAuth provider' %> only; we never see or store a password. From the provider
     we keep your <strong>display name</strong>, <strong>avatar URL</strong>, and
     <strong>email address</strong>, plus the provider's account ID so we can recognise you next time.
     Your email is never shown publicly and never used to contact you.
@@ -58,7 +58,7 @@
 
   <h2>Who else is involved</h2>
   <ul>
-    <li><strong>GitHub / Google</strong>: only when you choose to sign in with them, under their own privacy policies.</li>
+    <% if (providers.length) { %><li><strong><%= providers.join(' / ') %></strong>: only when you choose to sign in, under <%= providers.length > 1 ? 'their' : 'its' %> own privacy polic<%= providers.length > 1 ? 'ies' : 'y' %>.</li><% } %>
     <li><strong>Our hosting provider</strong>: the server everything runs on.</li>
   </ul>
   <p>No other third parties receive your data.</p>
