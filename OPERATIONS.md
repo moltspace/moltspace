@@ -91,7 +91,17 @@ LogsDirectory=caddy
 ```
 then `sudo systemctl daemon-reload && sudo systemctl restart caddy`.
 
-## Redeploy (files come via SMB)
+## Redeploy (from GitHub — preferred)
+
+```bash
+moltspace-update        # = scripts/vps-update.sh: backup → git pull → rsync (keeps .env) → build → migrate → pm2 reload → /healthz
+```
+
+One-time setup:
+`git clone https://github.com/moltspace/moltspace.git /root/moltspace-src && ln -sf /root/moltspace-src/scripts/vps-update.sh /usr/local/bin/moltspace-update`
+(the script is committed with its executable bit — don't `chmod` it on the VPS, that shows up as a local change and blocks `git pull`).
+
+## Redeploy (files come via SMB — legacy)
 
 ```bash
 # 1. drop updated files into /media/moltspace, then:

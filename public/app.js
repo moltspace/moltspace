@@ -27,6 +27,36 @@
     return p === "light" ? "☀" : p === "dark" ? "☾" : "◐";
   }
 
+  // Mobile menu: the button only shows under the CSS breakpoint; on desktop it's inert.
+  document.addEventListener("DOMContentLoaded", function () {
+    var toggle = document.getElementById("nav-toggle");
+    var header = toggle && toggle.closest(".site-header");
+    if (!toggle || !header) return;
+
+    function setOpen(open) {
+      header.classList.toggle("nav-open", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    }
+
+    toggle.addEventListener("click", function () {
+      setOpen(!header.classList.contains("nav-open"));
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && header.classList.contains("nav-open")) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+    document.addEventListener("click", function (e) {
+      if (header.classList.contains("nav-open") && !header.contains(e.target)) setOpen(false);
+    });
+    // in-page links (e.g. "#browse") don't navigate, so close explicitly
+    header.querySelectorAll(".site-nav a").forEach(function (a) {
+      a.addEventListener("click", function () { setOpen(false); });
+    });
+  });
+
   document.addEventListener("DOMContentLoaded", function () {
     var btn = document.getElementById("theme-toggle");
     if (!btn) return;
