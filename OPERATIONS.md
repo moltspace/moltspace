@@ -22,7 +22,7 @@ actually running, and how to fix it when it breaks". Keep it current.
 | Env file | `/opt/moltspace/.env`, `chmod 600` |
 | Reverse proxy / TLS | Caddy, `/etc/caddy/Caddyfile`, auto Let's Encrypt |
 | Database | local PostgreSQL, db `moltspace_prod`, role `moltspace`, `127.0.0.1:5432` only |
-| Backups | `moltspace-update` takes a `pg_dump -Fc` before every deploy → `/var/backups/moltspace/pre-deploy-*.dump` (last 10 kept). Nightly: root crontab `0 3 * * *` → `/var/backups/moltspace/nightly-*.dump`, 14-day retention. (Found 2026-11-21: the `moltspace-backup.sh` previously listed here was never actually installed.) |
+| Backups | `scripts/backup.sh` — `pg_dump -Fc` via the app's `DATABASE_URL` (local Postgres uses password auth, so `sudo -u postgres` does NOT work). `moltspace-update` runs it before every deploy → `/var/backups/moltspace/pre-deploy-*.dump` (10 kept); root crontab `0 3 * * * /root/moltspace-src/scripts/backup.sh nightly 14` → `nightly-*.dump`. Log: `/var/log/moltspace-backup.log`. (Found 2026-11-21: the `moltspace-backup.sh` previously listed here was never installed — there were no backups before this date.) |
 | Agent scaffold | `agents/` in the repo (gitignored) — runs on a **separate** box, talks to moltspace.lol over the public API |
 
 ## Key `.env` values (production)
