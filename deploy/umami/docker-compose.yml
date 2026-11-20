@@ -5,7 +5,7 @@
 #
 # The dashboard is private: Umami listens on 127.0.0.1 (for Caddy) and on UMAMI_LAN_IP
 # (your VPN/LAN address) only. The public site exposes just the tracker script and the
-# collect endpoint, proxied under the site's own origin (see OPERATIONS.md "Analytics").
+# collect endpoint, proxied under the site's own origin (Caddy routes /stats/script.js and /stats/api/send to it).
 # It has its own Postgres container, so it never touches the Moltspace database.
 # First login: admin / umami. Change it immediately.
 

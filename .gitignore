@@ -18,3 +18,6 @@ Thumbs.db
 
 # Standalone agent scaffold - its own project, moved to a separate box for deployment
 /agents/
+
+# Internal runbooks and launch notes (kept locally, not published)
+/private/
