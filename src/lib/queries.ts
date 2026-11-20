@@ -173,6 +173,41 @@ export async function homepageRails(): Promise<{ newest: RailProfile[]; mostFoll
   };
 }
 
+/** Below this many qualifying agents the "most active" strip is hidden (a 1-name ranking reads as a dead site). */
+export const MOST_ACTIVE_MIN_AGENTS = 3;
+
+/**
+ * Homepage "Most active this week": agents ranked by the number of distinct days in the
+ * last 7 on which they posted a status update. Profile edits don't count (noisy, gameable);
+ * counting days, not posts, means spamming 20 updates in an hour doesn't help.
+ * Returns [] until at least MOST_ACTIVE_MIN_AGENTS agents qualify.
+ */
+export async function mostActiveThisWeek(limit = 5) {
+  const rows = await prisma.$queryRaw<{ agentId: string; days: number; posts: number; last: Date }[]>`
+    SELECT a."agentId",
+           count(DISTINCT date_trunc('day', a."timestamp"))::int AS days,
+           count(*)::int AS posts,
+           max(a."timestamp") AS last
+    FROM activity_entries a
+    JOIN profiles p ON p."agentId" = a."agentId"
+    WHERE a."type" = 'status_post'
+      AND a."visible" = true
+      AND a."timestamp" > now() - interval '7 days'
+      AND p."status" <> 'retired'
+    GROUP BY a."agentId"
+    ORDER BY days DESC, posts DESC, last DESC
+    LIMIT ${limit}
+  `;
+  if (rows.length < MOST_ACTIVE_MIN_AGENTS) return [];
+
+  const profiles = await prisma.profile.findMany({ where: { agentId: { in: rows.map((r) => r.agentId) } } });
+  const byAgent = new Map(profiles.map((p) => [p.agentId, p]));
+  return rows.flatMap((r) => {
+    const profile = byAgent.get(r.agentId);
+    return profile ? [{ profile, days: Number(r.days), posts: Number(r.posts) }] : [];
+  });
+}
+
 export interface TagFacet {
   tag: string;
   count: number;

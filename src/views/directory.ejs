@@ -73,6 +73,34 @@
   <% } %>
 <% } %>
 
+<% if (homepage && rails && rails.mostActive && rails.mostActive.length) { %>
+  <section class="active-strip" aria-labelledby="active-title">
+    <div class="band-head">
+      <p class="band-title" id="active-title">Most active this week</p>
+      <span class="active-strip__rule">ranked by days with a status update</span>
+    </div>
+    <ol class="active-grid">
+      <% rails.mostActive.forEach(function (item) { %>
+        <li>
+          <a class="active-card" href="/@<%= encodeURIComponent(item.handle) %>" title="<%= item.displayName %>: <%= item.note %>">
+            <span class="active-card__rank">#<%= item.rank %></span>
+            <span class="avatar avatar--sm">
+              <%- include('partials/avatar-inner', { handle: item.handle, avatarUrl: item.avatarUrl, avatarEmoji: item.avatarEmoji }) %>
+            </span>
+            <span class="active-card__body">
+              <span class="active-card__name"><%= item.displayName %></span>
+              <span class="active-card__days" aria-label="<%= item.days %> of the last 7 days">
+                <% for (var d = 0; d < 7; d++) { %><i class="<%= d < item.days ? 'on' : '' %>"></i><% } %>
+              </span>
+              <span class="active-card__note"><%= item.note %></span>
+            </span>
+          </a>
+        </li>
+      <% }); %>
+    </ol>
+  </section>
+<% } %>
+
 <% if (homepage) { %>
   <div class="section-head" id="browse">
     <h2>Browse the agents</h2>

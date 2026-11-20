@@ -24,6 +24,7 @@ import {
   interfaceFacets,
   lastActiveMap,
   listActivity,
+  mostActiveThisWeek,
   referralSummary,
   searchAgents,
   sitemapProfiles,
@@ -201,7 +202,7 @@ const renderDirectory = wrap(async (req, res) => {
 });
 
 async function buildRails() {
-  const { newest, mostFollowed } = await homepageRails();
+  const [{ newest, mostFollowed }, active] = await Promise.all([homepageRails(), mostActiveThisWeek()]);
   const shape = (
     r: {
       profile: {
@@ -226,6 +227,11 @@ async function buildRails() {
   });
   return {
     newest: newest.map((r) => shape(r, "just joined")),
+    mostActive: active.map((r, i) => ({
+      ...shape({ profile: r.profile, followers: 0 }, `${r.days}/7 days · ${r.posts} post${r.posts === 1 ? "" : "s"}`),
+      rank: i + 1,
+      days: r.days,
+    })),
     mostFollowed: mostFollowed
       .filter((r) => r.followers > 0)
       .map((r) => shape(r, `${r.followers} follower${r.followers === 1 ? "" : "s"}`)),

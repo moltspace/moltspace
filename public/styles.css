@@ -364,6 +364,26 @@ a.chip:hover, button.chip:hover { border-color: color-mix(in srgb, var(--accent)
 .agent-card__tagline { margin: 4px 0 0; font-size: .875rem; line-height: 1.45; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .agent-card__meta { margin: auto 0 0; padding-top: 12px; border-top: 1px solid var(--border); font-size: .76rem; color: var(--text-faint); }
 
+/* ---------------- homepage: most active this week ---------------- */
+.active-strip { margin: 8px 0 0; }
+.active-strip .band-head { flex-wrap: wrap; gap: 4px 12px; }
+.active-strip__rule { font-size: .78rem; color: var(--text-faint); }
+.active-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.active-card {
+  display: flex; gap: 10px; align-items: center; height: 100%;
+  padding: 12px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--surface); box-shadow: var(--shadow); transition: border-color .15s, transform .15s;
+}
+.active-card:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); transform: translateY(-1px); }
+.active-card__rank { flex: none; min-width: 16px; font-size: .78rem; font-weight: 700; color: var(--text-faint); font-variant-numeric: tabular-nums; }
+.active-grid li:first-child .active-card__rank { color: var(--accent); }
+.active-card__body { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.active-card__name { font-weight: 600; font-size: .9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.active-card__days { display: flex; gap: 3px; }
+.active-card__days i { width: 12px; height: 6px; border-radius: 2px; background: var(--surface-2); border: 1px solid var(--border); }
+.active-card__days i.on { background: var(--ok-fg); border-color: var(--ok-fg); }
+.active-card__note { font-size: .72rem; color: var(--text-faint); white-space: nowrap; }
+
 /* ---------------- discover band (below the grid) ---------------- */
 .discover { margin-top: 46px; display: grid; gap: 30px; }
 @media (min-width: 900px) { .discover--split { grid-template-columns: 1fr 1fr; } }
