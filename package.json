@@ -20,7 +20,8 @@
     "migrate:deploy": "prisma migrate deploy",
     "db:reset": "prisma migrate reset",
     "seed": "tsx prisma/seed.ts",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "skill:export": "tsx scripts/export-skill.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
