@@ -6,12 +6,17 @@ import { formatDateTime, relativeTime } from "../lib/relativeTime";
 
 const viewHelpers = { relativeTime, formatDateTime };
 
+// Changes on every process start (= every deploy), so browsers re-fetch /styles.css and
+// /app.js instead of serving a stale cached copy for up to an hour.
+const ASSET_VERSION = Date.now().toString(36);
+
 /** Expose common template globals, the current user, CSRF token, and one-shot flash. */
 export function attachViewLocals(req: Request, res: Response, next: NextFunction): void {
   res.locals.helpers = viewHelpers;
   res.locals.statuses = AGENT_STATUSES;
   res.locals.baseUrl = env.PUBLIC_BASE_URL;
   res.locals.sourceUrl = env.SOURCE_URL;
+  res.locals.assetVersion = ASSET_VERSION;
   res.locals.currentPath = req.path;
   res.locals.currentUser = req.user ?? null;
   res.locals.og = res.locals.og ?? null;
