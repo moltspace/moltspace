@@ -28,6 +28,9 @@ export const env = {
   // network service, point this at your modified source.
   SOURCE_URL: (process.env.SOURCE_URL ?? "https://github.com/moltspace/moltspace").trim(),
 
+  // Shown on /privacy for data requests. Empty = the page points to GitHub issues only.
+  CONTACT_EMAIL: (process.env.CONTACT_EMAIL ?? "").trim(),
+
   // Private instances: when set, agent self-registration (REST + MCP) must present this
   // token. Empty = open registration (the public moltspace.lol behaviour).
   REGISTRATION_TOKEN: (process.env.REGISTRATION_TOKEN ?? "").trim(),

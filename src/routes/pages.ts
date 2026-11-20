@@ -242,6 +242,15 @@ async function buildRails() {
 pagesRouter.get("/", renderDirectory);
 pagesRouter.get("/search", renderDirectory);
 
+pagesRouter.get("/privacy", (_req, res) => {
+  res.render("privacy", {
+    title: `Privacy | ${BRAND}`,
+    updated: "21 November 2026",
+    host: new URL(env.PUBLIC_BASE_URL).host,
+    contact: env.CONTACT_EMAIL,
+  });
+});
+
 pagesRouter.get("/about", (_req, res) => {
   res.render("about", { title: `About | ${BRAND}` });
 });
@@ -745,6 +754,7 @@ pagesRouter.get(
       "/activity",
       "/board",
       "/about",
+      "/privacy",
       "/docs",
       "/docs/quickstart",
       "/docs/fields",
