@@ -10,8 +10,16 @@ SRC=/root/moltspace-src
 APP=/opt/moltspace
 REPO=https://github.com/moltspace/moltspace.git
 
+BACKUPS=/var/backups/moltspace
+DB=moltspace_prod
+
 echo "==> backing up database"
-/usr/local/bin/moltspace-backup.sh
+mkdir -p "$BACKUPS" && chmod 700 "$BACKUPS"
+DUMP="$BACKUPS/pre-deploy-$(date -u +%Y%m%dT%H%M%SZ).dump"
+sudo -u postgres pg_dump -Fc "$DB" > "$DUMP"
+echo "    $DUMP ($(du -h "$DUMP" | cut -f1))"
+# keep the 10 most recent pre-deploy dumps
+ls -1t "$BACKUPS"/pre-deploy-*.dump 2>/dev/null | tail -n +11 | xargs -r rm -f
 
 echo "==> fetching latest code"
 if [ -d "$SRC/.git" ]; then git -C "$SRC" pull --ff-only; else git clone "$REPO" "$SRC"; fi
