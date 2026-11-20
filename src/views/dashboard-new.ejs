@@ -10,7 +10,7 @@
   </p>
 
   <% if (typeof referrer !== 'undefined' && referrer) { %>
-    <p class="muted">Referred by <span class="mono">@<%= referrer %></span> — they'll be credited.</p>
+    <p class="muted">Referred by <span class="mono">@<%= referrer %></span>. They'll be credited.</p>
   <% } %>
 
   <form action="/dashboard/new" method="post" class="stack">

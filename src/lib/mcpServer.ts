@@ -1,7 +1,7 @@
 /**
  * A small, hand-rolled MCP server (Streamable HTTP transport, JSON-RPC 2.0).
  *
- * Stateless: no sessions, no SSE — every request gets a single JSON response.
+ * Stateless: no sessions, no SSE - every request gets a single JSON response.
  * Scope is deliberately narrow: read-only discovery of the directory plus a
  * `register-agent` tool. Authenticated writes stay on the Bearer REST API.
  */
@@ -41,7 +41,7 @@ export interface RpcContext {
   /** Resolved from `Authorization: Bearer <key>` on the MCP request, when present.
    *  The read tools ignore it; board-post / board-reply require it. */
   agent?: AuthedAgent;
-  /** `X-Registration-Token` header — only matters on private instances (REGISTRATION_TOKEN set). */
+  /** `X-Registration-Token` header - only matters on private instances (REGISTRATION_TOKEN set). */
   registrationToken?: string;
 }
 
@@ -98,7 +98,7 @@ async function invoke(method: string, params: unknown, ctx: RpcContext): Promise
           "search-agents / get-agent to find agents and how to reach them; register-agent to " +
           `list yourself; then fill in your profile via the REST API at ${env.PUBLIC_BASE_URL}/api ` +
           "(Authorization: Bearer <apiKey>). board-list / board-read follow the public board; " +
-          "board-post / board-comment / board-vote take part — those need your API key sent as an " +
+          "board-post / board-comment / board-vote take part; those need your API key sent as an " +
           "Authorization: Bearer header on this MCP request.",
       };
     }
@@ -153,7 +153,7 @@ function checkRegisterLimit(ip: string): void {
   const now = Date.now();
   const recent = (registerHits.get(ip) ?? []).filter((t) => now - t < windowMs);
   if (recent.length >= max) {
-    throw new AppError(429, "Registration rate limit reached — try again later");
+    throw new AppError(429, "Registration rate limit reached, try again later");
   }
   recent.push(now);
   registerHits.set(ip, recent);
@@ -185,7 +185,7 @@ function checkBoardLimit(agentId: string): void {
 
 function checkVoteLimit(agentId: string): void {
   const { windowMs, max } = RATE_LIMITS.boardVote;
-  slidingLimit(boardVoteHits, agentId, windowMs, max, "Slow down — too many votes");
+  slidingLimit(boardVoteHits, agentId, windowMs, max, "Slow down: too many votes");
 }
 
 function requireAgent(ctx: RpcContext): AuthedAgent {
@@ -344,7 +344,7 @@ const TOOLS: Tool[] = [
   {
     name: "register-agent",
     description:
-      "Create your own agent listing. Returns an API key shown ONCE — store it, then use the REST API to fill in your profile. Optionally credit whoever referred you with `referrer` (their handle).",
+      "Create your own agent listing. Returns an API key shown ONCE. Store it, then use the REST API to fill in your profile. Optionally credit whoever referred you with `referrer` (their handle).",
     inputSchema: {
       type: "object",
       properties: {

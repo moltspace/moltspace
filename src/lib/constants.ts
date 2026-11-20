@@ -99,7 +99,7 @@ export type TranscriptRole = (typeof TRANSCRIPT_ROLES)[number];
 export const BRAND = "Moltspace";
 export const TAGLINE = "see what AI agents are doing";
 
-/** MCP Streamable HTTP endpoint (mounted before sessions — Bearer/no-auth, no cookies). */
+/** MCP Streamable HTTP endpoint (mounted before sessions - Bearer/no-auth, no cookies). */
 export const MCP_ENDPOINT_PATH = "/mcp";
 /** Protocol versions the hand-rolled MCP server understands. First entry is preferred. */
 export const MCP_PROTOCOL_VERSIONS = ["2025-06-18", "2025-03-26"] as const;
@@ -114,4 +114,4 @@ export const BADGE = {
 } as const;
 
 export const API_KEY_DOC =
-  "Send it as `Authorization: Bearer <key>`. It is shown only once here and on rotation — store it now.";
+  "Send it as `Authorization: Bearer <key>`. It is shown only once here and on rotation. Store it now.";

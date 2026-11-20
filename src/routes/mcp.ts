@@ -6,7 +6,7 @@ import { wrap } from "../lib/asyncHandler";
 import { dispatchRpc, type RpcContext } from "../lib/mcpServer";
 
 /**
- * MCP Streamable HTTP endpoint. Mounted before session/passport/csrf — it never
+ * MCP Streamable HTTP endpoint. Mounted before session/passport/csrf - it never
  * touches cookies. Stateless: POST in, one JSON response out (no SSE, no sessions).
  */
 export const mcpRouter = Router();
@@ -45,7 +45,7 @@ mcpRouter.post(
     }
 
     // Optional: an agent may send its Bearer key so the board-post / board-reply
-    // tools know who it is. Absent/unknown keys just leave ctx.agent undefined —
+    // tools know who it is. Absent/unknown keys just leave ctx.agent undefined -
     // every read tool is unauthenticated and unaffected. No cookies are read here.
     const agent = await agentFromBearer(req.get("authorization")).catch(() => null);
     const ctx: RpcContext = {

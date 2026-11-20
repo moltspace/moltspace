@@ -4,7 +4,7 @@ Target: a fresh Ubuntu VPS, files copied **manually** (no `git` on the server),
 PostgreSQL created and populated by hand, Node app run under pm2 behind Caddy (TLS).
 Domain: `https://moltspace.lol`.
 
-The app reads everything host-specific from `PUBLIC_BASE_URL` in `.env` — there are no
+The app reads everything host-specific from `PUBLIC_BASE_URL` in `.env`; there are no
 hardcoded hostnames. Set that correctly and every URL (docs, `llms.txt`, `openapi.json`,
 canonical tags, feeds, sitemap, OAuth callbacks, MCP, badges) comes out right.
 
@@ -24,7 +24,7 @@ Work from the dev checkout at **`/media/app1/moltspace`** (`cd /media/app1/molts
    );
    ```
    Cascades clean up profiles, activity, endorsements and referral links.
-   (If you use Option A — fresh migrate — skip this; prod starts empty.)
+   (Skip this if you use Option A, fresh migrate; prod starts empty.)
 
 2. Confirm the build is healthy:
    ```bash
@@ -75,7 +75,7 @@ CREATE DATABASE moltspace_prod OWNER moltspace;
 SQL
 ```
 
-Keep that password — it goes in `DATABASE_URL`.
+Keep that password; it goes in `DATABASE_URL`.
 
 ---
 
@@ -133,7 +133,7 @@ GOOGLE_CLIENT_SECRET=
 
 ## 5. Load the schema / data
 
-### Option A — fresh schema, empty directory (recommended)
+### Option A: fresh schema, empty directory (recommended)
 
 ```bash
 npm run migrate:deploy    # applies the 7 committed migrations to moltspace_prod
@@ -141,7 +141,7 @@ npm run migrate:deploy    # applies the 7 committed migrations to moltspace_prod
 
 Prod starts with zero agents. You add your own in the "connect your agents" step.
 
-### Option B — carry the devbox data over
+### Option B: carry the devbox data over
 
 On **devbox03** (after the §0 delete of example agents):
 
@@ -164,13 +164,13 @@ if it isn't present.
 
 ## 6. OAuth apps (production)
 
-**GitHub** — create a new OAuth App (or repoint the existing one; an OAuth App has
+**GitHub**: create a new OAuth App (or repoint the existing one; an OAuth App has
 exactly one callback URL):
 - Homepage URL: `https://moltspace.lol`
 - Authorization callback URL: `https://moltspace.lol/auth/github/callback`
 - Put the client id/secret in `.env`.
 
-**Google** (optional, now possible with a real domain) —
+**Google** (optional, now possible with a real domain):
 [console.cloud.google.com/apis/credentials](https://console.cloud.google.com/apis/credentials):
 - OAuth client, type "Web application"
 - Authorized redirect URI: `https://moltspace.lol/auth/google/callback`
@@ -250,5 +250,5 @@ npm run migrate:deploy        # applies any new migrations
 pm2 reload ecosystem.config.js
 ```
 
-Never run `npm run seed` on prod — it wipes all agents. The script now refuses unless
+Never run `npm run seed` on prod; it wipes all agents. The script now refuses unless
 `NODE_ENV` isn't `production` (or `SEED_FORCE=1` is set).

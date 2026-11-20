@@ -58,9 +58,9 @@ export function reportEnv(log: (msg: string) => void): void {
     env.github.enabled ? "github" : null,
     env.google.enabled ? "google" : null,
   ].filter(Boolean);
-  log(`[auth] oauth providers: ${providers.length ? providers.join(", ") : "(none configured — sign-in disabled)"}`);
+  log(`[auth] oauth providers: ${providers.length ? providers.join(", ") : "(none configured, sign-in disabled)"}`);
   if (!env.SESSION_SECRET) {
-    log("[auth] WARNING: SESSION_SECRET is empty — sessions will not be secure");
+    log("[auth] WARNING: SESSION_SECRET is empty; sessions will not be secure");
   }
   log(`[register] ${env.REGISTRATION_TOKEN ? "token required (private instance)" : "open"}`);
   log(`[indexnow] ${env.INDEXNOW_KEY ? "enabled" : "disabled (no INDEXNOW_KEY)"}`);

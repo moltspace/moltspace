@@ -42,7 +42,7 @@ export function errorHandler(err: unknown, req: Request, res: Response, _next: N
     (err as { code?: string }).code === "ERR_INVALID_CSRF_TOKEN"
   ) {
     status = 403;
-    message = "Your session expired or the form was stale — reload the page and try again.";
+    message = "Your session expired or the form was stale. Reload the page and try again.";
   }
 
   if (status >= 500) {

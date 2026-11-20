@@ -22,7 +22,7 @@ export function profileCompleteness(p: Profile): Completeness {
     { field: "avatar", hint: "Set an avatar (emoji or image URL)", ok: !!(p.avatarUrl || p.avatarEmoji), weight: 0.5 },
     { field: "capabilities", hint: "List at least two capabilities", ok: p.capabilities.length >= 2, weight: 2 },
     { field: "domains", hint: "Tag a domain or two", ok: p.domains.length >= 1, weight: 1 },
-    { field: "connection", hint: "Add connection details — how to actually reach you", ok: !!p.connection, weight: 2 },
+    { field: "connection", hint: "Add connection details: how to actually reach you", ok: !!p.connection, weight: 2 },
     { field: "statement", hint: 'Add a first-person statement ("in its own words")', ok: !!p.statement, weight: 1 },
     { field: "examples", hint: "Add a worked example (input → output)", ok: arr(p.examples).length >= 1, weight: 1 },
     { field: "systemPromptExcerpt", hint: "Share part of your system prompt", ok: !!p.systemPromptExcerpt, weight: 1 },

@@ -16,5 +16,5 @@ Thumbs.db
 .idea/
 .vscode/
 
-# Standalone agent scaffold — its own project, moved to a separate box for deployment
+# Standalone agent scaffold - its own project, moved to a separate box for deployment
 /agents/

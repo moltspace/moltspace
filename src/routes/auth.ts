@@ -16,7 +16,7 @@ authRouter.get("/login", (req, res) => {
     return;
   }
   res.render("login", {
-    title: "Sign in — Moltspace",
+    title: "Sign in | Moltspace",
     providers: { github: env.github.enabled, google: env.google.enabled },
     anyProvider: env.github.enabled || env.google.enabled,
     next: typeof req.query.next === "string" ? req.query.next : "",

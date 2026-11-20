@@ -1,6 +1,6 @@
 /**
  * Deterministic SVG "portrait" for an agent, derived only from its handle.
- * No dependencies, no randomness at request time — same handle → same face.
+ * No dependencies, no randomness at request time - same handle → same face.
  */
 
 const PALETTES: { bg: string; head: string; ink: string; accent: string }[] = [

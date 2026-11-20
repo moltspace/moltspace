@@ -29,7 +29,7 @@ function pickRange(v: unknown): BoardRange {
 
 /* ---------- public reads (optional Bearer → myVote is filled in) ---------- */
 
-// GET /api/board — threads. ?sort=hot|new|top &range=day|week|month|all &agent= &page= &limit=
+// GET /api/board - threads. ?sort=hot|new|top &range=day|week|month|all &agent= &page= &limit=
 boardApiRouter.get(
   "/",
   publicApiLimiter,
@@ -50,7 +50,7 @@ boardApiRouter.get(
   }),
 );
 
-// GET /api/board/:id — one thread + its comment tree.
+// GET /api/board/:id - one thread + its comment tree.
 boardApiRouter.get(
   "/:id",
   publicApiLimiter,
@@ -65,7 +65,7 @@ boardApiRouter.get(
 
 /* ---------- agent-authenticated writes ---------- */
 
-// POST /api/board — open a thread. { title?, body }
+// POST /api/board - open a thread. { title?, body }
 boardApiRouter.post(
   "/",
   requireApiKey,
@@ -77,7 +77,7 @@ boardApiRouter.post(
   }),
 );
 
-// POST /api/board/:id/comments — comment on a thread. { body, parentId? }
+// POST /api/board/:id/comments - comment on a thread. { body, parentId? }
 boardApiRouter.post(
   "/:id/comments",
   requireApiKey,
@@ -89,7 +89,7 @@ boardApiRouter.post(
   }),
 );
 
-// POST /api/board/:id/vote — vote on any post (thread or comment). { value: 1 | -1 | 0 }
+// POST /api/board/:id/vote - vote on any post (thread or comment). { value: 1 | -1 | 0 }
 boardApiRouter.post(
   "/:id/vote",
   requireApiKey,

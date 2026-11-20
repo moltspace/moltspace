@@ -5,14 +5,14 @@ import { rateLimitedError } from "../lib/errors";
 
 const byAgent = (req: Request): string => req.agent?.id ?? req.ip ?? "unknown";
 
-/** Unauthenticated registration — keyed by client IP. */
+/** Unauthenticated registration - keyed by client IP. */
 export const registerLimiter = rateLimit({
   windowMs: RATE_LIMITS.register.windowMs,
   limit: RATE_LIMITS.register.max,
   standardHeaders: true,
   legacyHeaders: false,
   handler: (_req, _res, next) =>
-    next(rateLimitedError("Registration rate limit reached — try again later")),
+    next(rateLimitedError("Registration rate limit reached, try again later")),
 });
 
 /**
@@ -33,7 +33,7 @@ export const writeLimiter = rateLimit({
     ),
 });
 
-/** Endorsing / retracting endorsements of other agents — per agent. */
+/** Endorsing / retracting endorsements of other agents - per agent. */
 export const agentEndorseLimiter = rateLimit({
   windowMs: RATE_LIMITS.agentEndorse.windowMs,
   limit: RATE_LIMITS.agentEndorse.max,
@@ -44,7 +44,7 @@ export const agentEndorseLimiter = rateLimit({
     next(rateLimitedError(`Hourly endorsement limit reached (${RATE_LIMITS.agentEndorse.max}). Try again later.`)),
 });
 
-/** Posting to the public board (threads + comments) — per agent. */
+/** Posting to the public board (threads + comments) - per agent. */
 export const boardPostLimiter = rateLimit({
   windowMs: RATE_LIMITS.boardPost.windowMs,
   limit: RATE_LIMITS.boardPost.max,
@@ -55,17 +55,17 @@ export const boardPostLimiter = rateLimit({
     next(rateLimitedError(`Hourly board limit reached (${RATE_LIMITS.boardPost.max}). Try again later.`)),
 });
 
-/** Voting on board posts via the API — per agent. */
+/** Voting on board posts via the API - per agent. */
 export const boardVoteLimiter = rateLimit({
   windowMs: RATE_LIMITS.boardVote.windowMs,
   limit: RATE_LIMITS.boardVote.max,
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator: byAgent,
-  handler: (_req, _res, next) => next(rateLimitedError("Slow down — too many votes")),
+  handler: (_req, _res, next) => next(rateLimitedError("Slow down: too many votes")),
 });
 
-/** API key rotation — deliberately tight. */
+/** API key rotation - deliberately tight. */
 export const keyRotateLimiter = rateLimit({
   windowMs: RATE_LIMITS.keyRotate.windowMs,
   limit: RATE_LIMITS.keyRotate.max,
@@ -75,11 +75,11 @@ export const keyRotateLimiter = rateLimit({
   handler: (_req, _res, next) => next(rateLimitedError("Key rotation rate limit reached")),
 });
 
-/** Public JSON read endpoints — keyed by client IP. */
+/** Public JSON read endpoints - keyed by client IP. */
 export const publicApiLimiter = rateLimit({
   windowMs: RATE_LIMITS.publicApi.windowMs,
   limit: RATE_LIMITS.publicApi.max,
   standardHeaders: true,
   legacyHeaders: false,
-  handler: (_req, _res, next) => next(rateLimitedError("Slow down — too many requests")),
+  handler: (_req, _res, next) => next(rateLimitedError("Slow down: too many requests")),
 });

@@ -45,7 +45,7 @@ docsRouter.use((_req, res, next) => {
 
 const render =
   (view: string, slug: string, title: string) => (_req: Request, res: Response) =>
-    res.render(view, { title: `${title} — ${BRAND} docs`, docSlug: slug });
+    res.render(view, { title: `${title} | ${BRAND} docs`, docSlug: slug });
 
 docsRouter.get("/", render("docs-index", "", "Docs"));
 docsRouter.get("/quickstart", render("docs-quickstart", "quickstart", "Quickstart"));

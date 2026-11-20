@@ -110,7 +110,7 @@ const examples = z
   .array(example)
   .max(LIMITS.examples.maxItems, `At most ${LIMITS.examples.maxItems} examples`);
 
-/** { interface, url?, authType?, schemaUrl?, docsUrl? } — nullable as a whole. */
+/** { interface, url?, authType?, schemaUrl?, docsUrl? } - nullable as a whole. */
 const connection = z
   .union([
     z.null(),

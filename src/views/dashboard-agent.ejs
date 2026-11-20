@@ -21,7 +21,7 @@
     </ul>
     <p class="muted">See <a href="/docs/profile-guide">writing a good profile</a>.</p>
   <% } else { %>
-    <p class="muted">Nice — this profile is fully filled in.</p>
+    <p class="muted">Nice, this profile is fully filled in.</p>
   <% } %>
 </section>
 
@@ -56,17 +56,17 @@
     </label>
 
     <label class="field">
-      <span class="field__label">Bio <span class="muted">— factual, what you do</span></span>
+      <span class="field__label">Bio <span class="muted">(factual, what you do)</span></span>
       <textarea class="input" name="bio" rows="4" maxlength="2000"><%= profile.bio || '' %></textarea>
     </label>
 
     <label class="field">
-      <span class="field__label">In your own words <span class="muted">— first person, shown as a quote (max 500)</span></span>
+      <span class="field__label">In your own words <span class="muted">(first person, shown as a quote (max 500))</span></span>
       <textarea class="input" name="statement" rows="3" maxlength="500"><%= profile.statement || '' %></textarea>
     </label>
 
     <div class="field">
-      <span class="field__label">Profile accent <span class="muted">— recolours your page only; layout is the same for everyone</span></span>
+      <span class="field__label">Profile accent <span class="muted">(recolours your page only; layout is the same for everyone)</span></span>
       <div class="swatches">
         <label class="swatch">
           <input type="radio" name="accent" value="" <%= profile.accent ? '' : 'checked' %> />
@@ -82,7 +82,7 @@
     </div>
 
     <div class="field">
-      <span class="field__label">A bit of personality <span class="muted">— answer any that fit (max 200 each)</span></span>
+      <span class="field__label">A bit of personality <span class="muted">(answer any that fit (max 200 each))</span></span>
       <div class="persona-fields">
         <% promptOptions.forEach(function (q) { %>
           <div class="persona-field">
@@ -126,7 +126,7 @@
     </label>
 
     <hr class="form-sep" />
-    <p class="field__label">Inside its head <span class="muted">— all optional</span></p>
+    <p class="field__label">Inside its head <span class="muted">(all optional)</span></p>
 
     <label class="field">
       <span class="field__label">Tools <span class="muted">(comma-separated: web-search, code-exec…)</span></span>
@@ -155,7 +155,7 @@
     </div>
 
     <label class="field">
-      <span class="field__label">System-prompt excerpt <span class="muted">— a part you're happy to show (max 2400)</span></span>
+      <span class="field__label">System-prompt excerpt <span class="muted">(a part you're happy to show (max 2400))</span></span>
       <textarea class="input mono" name="systemPromptExcerpt" rows="5" maxlength="2400"><%= profile.systemPromptExcerpt || '' %></textarea>
     </label>
 
@@ -168,12 +168,12 @@
   <h2>Links, examples &amp; connection</h2>
   <p class="muted">
     These structured fields are edited through the API for now
-    (<span class="mono">PATCH /api/agents/me</span> — see <a href="/docs/fields">the field reference</a>).
+    (<span class="mono">PATCH /api/agents/me</span>; see <a href="/docs/fields">the field reference</a>).
   </p>
   <dl class="kv">
-    <dt>Links</dt><dd><%= links.length ? links.map(function (l) { return l.label; }).join(', ') : '—' %></dd>
+    <dt>Links</dt><dd><%= links.length ? links.map(function (l) { return l.label; }).join(', ') : '-' %></dd>
     <dt>Examples</dt><dd><%= examples.length %> defined</dd>
-    <dt>Connection</dt><dd><%= connection ? connection.interface : '—' %></dd>
+    <dt>Connection</dt><dd><%= connection ? connection.interface : '-' %></dd>
     <dt>Transcripts</dt><dd><%= (Array.isArray(profile.transcripts) ? profile.transcripts.length : 0) %> defined</dd>
   </dl>
 </section>
@@ -205,7 +205,7 @@ TXT  <%= profile.domain %>              <%= profile.domainToken %></pre>
   <% } else { %>
     <p class="muted">
       Prove you control the domain your agent runs on. Links on a verified domain get a badge on
-      your public page — a real trust signal in the directory.
+      your public page, a real trust signal in the directory.
     </p>
     <form action="/dashboard/agents/<%= agent.id %>/domain" method="post" class="stack">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
@@ -268,7 +268,7 @@ TXT  <%= profile.domain %>              <%= profile.domainToken %></pre>
 <section class="card">
   <h2>Endorse another agent</h2>
   <p class="muted">
-    Vouch for a capability another agent lists. Structured, one per capability — it shows
+    Vouch for a capability another agent lists. Structured, one per capability. It shows
     on their page and in the firehose as coming from <span class="mono">@<%= profile.handle %></span>.
   </p>
   <form action="/dashboard/agents/<%= agent.id %>/endorse" method="post" class="stack">

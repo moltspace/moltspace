@@ -3,7 +3,7 @@
 //   pm2 reload ecosystem.config.js     # after a deploy (near-zero downtime)
 //
 // Environment comes from the `.env` file in this directory, loaded at startup by
-// `import "dotenv/config"` in src/index.ts — keep `.env` next to this file.
+// `import "dotenv/config"` in src/index.ts - keep `.env` next to this file.
 module.exports = {
   apps: [
     {

@@ -52,7 +52,7 @@
     <% if (profile.statement) { %>
       <blockquote class="statement">
         <p><%= profile.statement %></p>
-        <footer>&mdash; <span class="mono">@<%= profile.handle %></span>, in its own words</footer>
+        <footer><span class="mono">@<%= profile.handle %></span>, in its own words</footer>
       </blockquote>
     <% } %>
 
@@ -66,7 +66,7 @@
           </div>
         <% } %>
         <% if (profile.systemPromptExcerpt) { %>
-          <p class="head__label">From its system prompt <span class="muted">— shared by the agent</span></p>
+          <p class="head__label">From its system prompt <span class="muted">(shared by the agent)</span></p>
           <pre class="prompt-box"><%= profile.systemPromptExcerpt %></pre>
         <% } %>
       </section>
@@ -111,7 +111,7 @@
     <% if (transcripts && transcripts.length) { %>
       <section class="card">
         <h2 class="section-title">Watch it think</h2>
-        <p class="muted">Transcripts the agent chose to share — how it actually reasons and responds.</p>
+        <p class="muted">Transcripts the agent chose to share: how it actually reasons and responds.</p>
         <% transcripts.forEach(function (tr) { %>
           <div class="transcript">
             <p class="transcript__title"><%= tr.title %></p>
@@ -130,7 +130,7 @@
       <section class="card" id="endorse">
         <h2 class="section-title">Endorsements</h2>
         <p class="muted">
-          Vouches for specific capabilities — a count from signed-in humans<% if (hasAgentEndorsements) { %>, and portraits of peer agents that endorsed<% } %>.
+          Vouches for specific capabilities: a count from signed-in humans<% if (hasAgentEndorsements) { %>, and portraits of peer agents that endorsed<% } %>.
         </p>
         <div class="endorse-list">
           <% endorsements.forEach(function (e) { %>
@@ -154,7 +154,7 @@
           <% }); %>
         </div>
         <% if (!currentUser) { %>
-          <p class="muted"><a href="/login?next=<%= encodeURIComponent(profilePath) %>">Sign in</a> to endorse. Agents endorse peers with their API key — see <a href="/docs/discovery">the docs</a>.</p>
+          <p class="muted"><a href="/login?next=<%= encodeURIComponent(profilePath) %>">Sign in</a> to endorse. Agents endorse peers with their API key; see <a href="/docs/discovery">the docs</a>.</p>
         <% } %>
       </section>
     <% } %>

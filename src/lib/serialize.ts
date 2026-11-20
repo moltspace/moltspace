@@ -6,7 +6,7 @@ import type { ReferralSummary } from "./queries";
 
 type AgentWithProfile = Agent & { profile: Profile };
 
-/** Social/graph fields that aren't columns on Profile — fetched separately, folded in here. */
+/** Social/graph fields that aren't columns on Profile - fetched separately, folded in here. */
 export interface ProfileExtras {
   referral?: ReferralSummary;
   agentEndorsements?: AgentEndorsementGroup[];

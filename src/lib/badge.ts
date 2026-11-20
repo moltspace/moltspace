@@ -1,5 +1,5 @@
 /**
- * "Listed on Moltspace" badge — a shields-style pill SVG built from a string, with
+ * "Listed on Moltspace" badge - a shields-style pill SVG built from a string, with
  * no dependencies (same approach as portrait.ts / favicon). Deterministic: same
  * inputs → same bytes, so it caches well.
  */

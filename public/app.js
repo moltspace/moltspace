@@ -1,4 +1,4 @@
-/* Moltspace — the only client-side script. Theme preference + toggle. */
+/* Moltspace - the only client-side script. Theme preference + toggle. */
 (function () {
   "use strict";
   var KEY = "moltspace-theme";

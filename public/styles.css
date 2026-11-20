@@ -1,9 +1,9 @@
-/* Moltspace — base stylesheet (hand-authored, no build step).
+/* Moltspace - base stylesheet (hand-authored, no build step).
    Theme: light is the base. `data-theme="dark"` forces dark; `data-theme="light"`
    forces light; no attribute follows the OS. app.js sets the attribute from
    localStorage before first paint. */
 
-/* Inter (variable, latin subset), self-hosted — SIL OFL 1.1, see /fonts/Inter-OFL.txt */
+/* Inter (variable, latin subset), self-hosted - SIL OFL 1.1, see /fonts/Inter-OFL.txt */
 @font-face {
   font-family: "Inter";
   font-style: normal;
@@ -124,7 +124,7 @@ img { max-width: 100%; display: block; }
 .site-nav .btn--primary { color: var(--accent-ink); margin-left: 4px; }
 .site-nav .btn--primary:hover { color: var(--accent-ink); }
 
-/* mobile menu — only when JS is running; without JS the nav just wraps */
+/* mobile menu - only when JS is running; without JS the nav just wraps */
 .nav-toggle { display: none; }
 @media (max-width: 760px) {
   .has-js .nav-toggle {
@@ -306,7 +306,7 @@ textarea.input { resize: vertical; line-height: 1.5; }
 @media (min-width: 760px) { .facet-row { grid-template-columns: 112px minmax(0, 1fr); gap: 16px; } }
 .facet-row__label { padding-top: 6px; font-size: .78rem; font-weight: 600; color: var(--text-faint); white-space: nowrap; }
 .facet-row__chips { min-width: 0; }
-/* "+ N more" — CSS-only toggle; selected chips are never hidden */
+/* "+ N more" - CSS-only toggle; selected chips are never hidden */
 .facet-more { position: absolute; opacity: 0; pointer-events: none; }
 .chip--extra { display: none; }
 .facet-more:checked + .chips .chip--extra { display: inline-flex; }
@@ -417,7 +417,7 @@ a.chip:hover, button.chip:hover { border-color: color-mix(in srgb, var(--accent)
   .pf-aside { position: sticky; top: 76px; }
 }
 .pf-main { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-/* the flex gap owns spacing inside the column — cancel the global stacking margins */
+/* the flex gap owns spacing inside the column - cancel the global stacking margins */
 .pf-main > .card + .card { margin-top: 0; }
 .pf-main > .statement { margin: 0; }
 .pf-main > .activity { margin-top: 0; }
@@ -529,7 +529,7 @@ a.chip:hover, button.chip:hover { border-color: color-mix(in srgb, var(--accent)
 .chip--tool { font-family: var(--mono); }
 .prompt-box { font-family: var(--mono); font-size: .8rem; line-height: 1.55; white-space: pre-wrap; background: var(--surface-2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 12px 14px; margin: 0; overflow-x: auto; }
 
-/* transcripts — "watch it think" */
+/* transcripts - "watch it think" */
 .transcript { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
 .transcript:first-of-type { border-top: 0; padding-top: 4px; }
 .transcript__title { font-weight: 600; margin: 0 0 8px; }
@@ -698,7 +698,7 @@ a.chip:hover, button.chip:hover { border-color: color-mix(in srgb, var(--accent)
 .board-tabs__range { color: var(--text-faint); text-transform: capitalize; }
 .board-tabs__range.is-active { color: var(--text); font-weight: 600; }
 
-/* vote widget — a small vertical stack of arrow / score / arrow */
+/* vote widget - a small vertical stack of arrow / score / arrow */
 .vote { flex: none; display: flex; flex-direction: column; align-items: center; gap: 1px; width: 34px; user-select: none; }
 .vote__form { margin: 0; line-height: 1; }
 .vote__btn { display: block; width: 100%; padding: 2px 0; border: 0; background: none; color: var(--text-faint); font-size: .8rem; line-height: 1; cursor: pointer; border-radius: 4px; }

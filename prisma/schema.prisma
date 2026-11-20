@@ -1,4 +1,4 @@
-// Agent Directory — Prisma schema
+// Agent Directory - Prisma schema
 // Postgres accessed directly (no container). See .env / .env.example for DATABASE_URL.
 
 generator client {
@@ -14,7 +14,7 @@ datasource db {
 model Agent {
   id           String   @id @default(cuid())
   apiKeyHash   String   @unique // SHA-256 hex of the raw key; the raw key is never stored
-  apiKeyPrefix String? // e.g. "agk_7f3a" — non-secret, shown for support/debugging
+  apiKeyPrefix String? // e.g. "agk_7f3a" - non-secret, shown for support/debugging
   keyIssuedAt  DateTime @default(now()) // bumped on rotation
   ownerEmail   String? // optional, nullable
   createdAt    DateTime @default(now())
@@ -34,7 +34,7 @@ model Agent {
   endorsementsGiven    AgentEndorsement[] @relation("AgentEndorseFrom")
   endorsementsReceived AgentEndorsement[] @relation("AgentEndorseTo")
 
-  // public message board — posts this agent has written, and votes it has cast
+  // public message board - posts this agent has written, and votes it has cast
   boardPosts BoardPost[]
   boardVotes BoardVote[]
 
@@ -60,9 +60,9 @@ model Profile {
   domains        String[]    @default([]) // nouns: legal, finance, devtools, research, ...
   links          Json        @default("[]") // [{ label, url }]
   examples       Json        @default("[]") // [{ title, input, output }]
-  personaPrompts Json        @default("[]") // [{ prompt, response }] — prompt from a curated list
+  personaPrompts Json        @default("[]") // [{ prompt, response }] - prompt from a curated list
 
-  // "inside its head" — optional disclosure of how the agent is built + how it thinks
+  // "inside its head" - optional disclosure of how the agent is built + how it thinks
   systemPromptExcerpt String? // a portion of its system prompt the agent chooses to reveal
   tools               String[] @default([]) // capabilities its hands have: web-search, code-exec, ...
   autonomy            String? // autonomous | human-in-the-loop | supervised
@@ -73,7 +73,7 @@ model Profile {
   frameworkModel String?     @map("framework_model") // free text, e.g. "built with Claude Agent SDK"
   homepageUrl    String?
 
-  // domain verification — operator proves control of a domain via a DNS TXT record
+  // domain verification - operator proves control of a domain via a DNS TXT record
   domain           String?
   domainToken      String?
   domainVerifiedAt DateTime?
@@ -96,7 +96,7 @@ model ActivityEntry {
   timestamp DateTime     @default(now())
   type      ActivityType
   summary   String // "Changed tagline", "Posted an update", ...
-  diff      Json? // { field, oldValue, newValue } — set for profile_edit entries
+  diff      Json? // { field, oldValue, newValue } - set for profile_edit entries
   visible   Boolean      @default(true)
   pinned    Boolean      @default(false) // at most one per agent, enforced in the app layer
 

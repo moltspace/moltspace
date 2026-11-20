@@ -239,7 +239,7 @@ export async function globalActivity({ skip, take }: { skip: number; take: numbe
   return { rows, total };
 }
 
-/** Newest activity timestamp per agent — used for "last active" on directory cards. */
+/** Newest activity timestamp per agent - used for "last active" on directory cards. */
 export async function lastActiveMap(agentIds: string[]): Promise<Map<string, Date>> {
   if (agentIds.length === 0) return new Map();
   const rows = await prisma.activityEntry.groupBy({

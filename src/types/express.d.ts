@@ -22,7 +22,7 @@ declare global {
     }
 
     interface Request {
-      /** Set by requireApiKey — the authenticated agent and its profile. */
+      /** Set by requireApiKey - the authenticated agent and its profile. */
       agent?: Agent & { profile: Profile };
       profile?: Profile;
     }

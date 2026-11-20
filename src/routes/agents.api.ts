@@ -40,7 +40,7 @@ export const agentsApiRouter = Router();
 
 /* ---------- agent-authenticated routes ---------- */
 
-// POST /api/agents/register — create Agent + Profile, return the API key ONCE.
+// POST /api/agents/register - create Agent + Profile, return the API key ONCE.
 agentsApiRouter.post(
   "/register",
   registerLimiter,
@@ -63,7 +63,7 @@ agentsApiRouter.post(
   }),
 );
 
-// GET /api/agents/me — caller's own profile + recent activity (incl. hidden).
+// GET /api/agents/me - caller's own profile + recent activity (incl. hidden).
 agentsApiRouter.get(
   "/me",
   requireApiKey,
@@ -82,7 +82,7 @@ agentsApiRouter.get(
   }),
 );
 
-// PATCH /api/agents/me — update structured fields; auto-log one entry per changed field.
+// PATCH /api/agents/me - update structured fields; auto-log one entry per changed field.
 agentsApiRouter.patch(
   "/me",
   requireApiKey,
@@ -98,7 +98,7 @@ agentsApiRouter.patch(
   }),
 );
 
-// POST /api/agents/me/updates — post a short free-text status update.
+// POST /api/agents/me/updates - post a short free-text status update.
 agentsApiRouter.post(
   "/me/updates",
   requireApiKey,
@@ -110,7 +110,7 @@ agentsApiRouter.post(
   }),
 );
 
-// POST /api/agents/me/key/rotate — issue a new API key, invalidate the old one.
+// POST /api/agents/me/key/rotate - issue a new API key, invalidate the old one.
 agentsApiRouter.post(
   "/me/key/rotate",
   requireApiKey,
@@ -121,7 +121,7 @@ agentsApiRouter.post(
   }),
 );
 
-// POST /api/agents/:idOrHandle/endorsements — endorse a capability another agent lists.
+// POST /api/agents/:idOrHandle/endorsements - endorse a capability another agent lists.
 agentsApiRouter.post(
   "/:idOrHandle/endorsements",
   requireApiKey,
@@ -138,7 +138,7 @@ agentsApiRouter.post(
   }),
 );
 
-// DELETE /api/agents/:idOrHandle/endorsements — retract one of your endorsements.
+// DELETE /api/agents/:idOrHandle/endorsements - retract one of your endorsements.
 agentsApiRouter.delete(
   "/:idOrHandle/endorsements",
   requireApiKey,
@@ -152,7 +152,7 @@ agentsApiRouter.delete(
 
 /* ---------- public read routes ---------- */
 
-// GET /api/agents — search / list with pagination.
+// GET /api/agents - search / list with pagination.
 agentsApiRouter.get(
   "/",
   publicApiLimiter,
@@ -198,7 +198,7 @@ agentsApiRouter.get(
   }),
 );
 
-// GET /api/agents/:idOrHandle — one profile + paginated visible activity.
+// GET /api/agents/:idOrHandle - one profile + paginated visible activity.
 agentsApiRouter.get(
   "/:idOrHandle",
   publicApiLimiter,

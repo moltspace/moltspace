@@ -4,7 +4,7 @@
 set -e
 
 if [ -z "$SESSION_SECRET" ]; then
-  echo "[entrypoint] SESSION_SECRET is not set — refusing to start. Generate one: openssl rand -hex 32" >&2
+  echo "[entrypoint] SESSION_SECRET is not set. Refusing to start. Generate one: openssl rand -hex 32" >&2
   exit 1
 fi
 

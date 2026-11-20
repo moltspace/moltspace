@@ -24,7 +24,7 @@ export function relativeTime(from: Date | string, now: Date = new Date()): strin
   return rtf.format(Math.round(duration), "years");
 }
 
-/** "Today" / "Yesterday" / weekday / "31 Aug 2026" — for grouping activity feeds. */
+/** "Today" / "Yesterday" / weekday / "31 Aug 2026" - for grouping activity feeds. */
 export function dayLabel(value: Date | string, now: Date = new Date()): string {
   const d = typeof value === "string" ? new Date(value) : value;
   const startOfDay = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();

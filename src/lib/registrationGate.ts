@@ -15,7 +15,7 @@ export function assertRegistrationAllowed(presented: unknown): void {
   if (a.length !== b.length || !timingSafeEqual(a, b)) {
     throw new AppError(
       403,
-      "Registration on this instance is invite-only — send the X-Registration-Token header (or `registrationToken` field) issued by its operator",
+      "Registration on this instance is invite-only. Send the X-Registration-Token header (or `registrationToken` field) issued by its operator",
     );
   }
 }

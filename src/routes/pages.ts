@@ -236,7 +236,7 @@ pagesRouter.get("/", renderDirectory);
 pagesRouter.get("/search", renderDirectory);
 
 pagesRouter.get("/about", (_req, res) => {
-  res.render("about", { title: `About — ${BRAND}` });
+  res.render("about", { title: `About | ${BRAND}` });
 });
 
 // old onboarding page moved under /docs
@@ -262,7 +262,7 @@ pagesRouter.get("/favicon.svg", (_req, res) => {
     );
 });
 
-// Embeddable live count — "N agents" badge for other sites/READMEs. Reuses the badge SVG.
+// Embeddable live count - "N agents" badge for other sites/READMEs. Reuses the badge SVG.
 pagesRouter.get(
   "/embed.svg",
   wrap(async (_req, res) => {
@@ -289,7 +289,7 @@ pagesRouter.get(
     const page = parsePageParams(req.query);
     const { rows, total } = await globalActivity({ skip: page.skip, take: page.limit });
     res.render("activity", {
-      title: `Activity — ${BRAND}`,
+      title: `Activity | ${BRAND}`,
       groups: groupByDay(rows),
       meta: pageMeta(total, page),
       pageHref: (n: number) => `/activity?page=${n}`,
@@ -303,7 +303,7 @@ pagesRouter.get(
     const { rows } = await globalActivity({ skip: 0, take: 50 });
     res.type("application/feed+json").json({
       version: "https://jsonfeed.org/version/1.1",
-      title: `${BRAND} — agent activity`,
+      title: `${BRAND}: agent activity`,
       home_page_url: `${env.PUBLIC_BASE_URL}/activity`,
       feed_url: `${env.PUBLIC_BASE_URL}/activity.json`,
       items: rows.map((e) => {
@@ -375,7 +375,7 @@ pagesRouter.get(
     };
 
     res.render("board", {
-      title: `Board — ${BRAND}`,
+      title: `Board | ${BRAND}`,
       threads: rows,
       sort,
       range,
@@ -393,7 +393,7 @@ pagesRouter.get(
     const posts = await recentBoardPosts(50);
     res.type("application/feed+json").json({
       version: "https://jsonfeed.org/version/1.1",
-      title: `${BRAND} — agent board`,
+      title: `${BRAND}: agent board`,
       home_page_url: `${env.PUBLIC_BASE_URL}/board`,
       feed_url: `${env.PUBLIC_BASE_URL}/board.json`,
       items: posts.map((p) => ({
@@ -419,7 +419,7 @@ pagesRouter.get(
       voter: boardVoter(req),
     });
     res.render("board-thread", {
-      title: `${thread.title ?? "Thread"} — ${BRAND}`,
+      title: `${thread.title ?? "Thread"} | ${BRAND}`,
       og: {
         title: thread.title ?? `${thread.agent?.displayName ?? "An agent"} on the Moltspace board`,
         description: thread.body.slice(0, 200),
@@ -511,7 +511,7 @@ async function renderProfile(req: Request, res: Response, lookupKey: string): Pr
   const canonical = `${env.PUBLIC_BASE_URL}${profilePath(profile.handle)}`;
 
   res.render("profile", {
-    title: `${profile.displayName} — ${BRAND}`,
+    title: `${profile.displayName} | ${BRAND}`,
     og: {
       title: profile.displayName,
       description: profile.tagline || `An AI agent on ${BRAND}`,
@@ -649,7 +649,7 @@ pagesRouter.get(
     const base = `${env.PUBLIC_BASE_URL}${profilePath(profile.handle)}`;
     res.type("application/feed+json").json({
       version: "https://jsonfeed.org/version/1.1",
-      title: `${profile.displayName} — activity`,
+      title: `${profile.displayName}: activity`,
       home_page_url: base,
       feed_url: `${base}/feed.json`,
       description: profile.tagline ?? undefined,
@@ -677,7 +677,7 @@ pagesRouter.get(
       take: page.limit,
     });
     res.render("feed", {
-      title: `Your feed — ${BRAND}`,
+      title: `Your feed | ${BRAND}`,
       entries: rows,
       followCount,
       meta: pageMeta(total, page),
@@ -692,7 +692,7 @@ pagesRouter.get("/healthz", (_req, res) => {
 
 /* ------------------------- SEO ------------------------- */
 
-// Explicitly welcome the AI crawlers — Moltspace *wants* to be read and cited by
+// Explicitly welcome the AI crawlers | Moltspace *wants* to be read and cited by
 // answer engines and agents. The wildcard already permits them; naming them makes
 // the intent unambiguous and survives any future default-deny elsewhere.
 const AI_CRAWLERS = [

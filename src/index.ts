@@ -32,7 +32,7 @@ if (env.TRUST_PROXY > 0) app.set("trust proxy", env.TRUST_PROXY);
 app.set("view engine", "ejs");
 app.set("views", VIEWS_DIR);
 
-// Per-request CSP nonce — lets us emit inline JSON-LD in <head> without 'unsafe-inline'.
+// Per-request CSP nonce - lets us emit inline JSON-LD in <head> without 'unsafe-inline'.
 app.use((_req, res, next) => {
   res.locals.cspNonce = randomBytes(16).toString("base64");
   next();
@@ -73,7 +73,7 @@ app.use((_req, res, next) => {
 });
 
 // Capture ?ref=<handle> into a short-lived cookie so a later web sign-up credits the referrer.
-// Web pages only — the JSON API and MCP endpoint stay cookie-free.
+// Web pages only - the JSON API and MCP endpoint stay cookie-free.
 app.use((req, res, next) => {
   const ref = typeof req.query.ref === "string" ? req.query.ref.trim().slice(0, 64) : "";
   const webPath = !req.path.startsWith("/api/") && !req.path.startsWith("/mcp");

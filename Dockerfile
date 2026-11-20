@@ -1,4 +1,4 @@
-# Moltspace — self-hosted image.
+# Moltspace - self-hosted image.
 #   docker compose up -d        (see docker-compose.yml + README "Self-hosting")
 #
 # Debian slim, not alpine: Prisma's query engine wants glibc + openssl.

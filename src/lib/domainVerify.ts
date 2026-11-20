@@ -25,7 +25,7 @@ export async function checkDomainTxt(domain: string, token: string): Promise<boo
       const flat = records.map((chunks) => chunks.join("")).join("\n");
       if (flat.includes(token)) return true;
     } catch {
-      // NXDOMAIN / no TXT / timeout — try the next host
+      // NXDOMAIN / no TXT / timeout - try the next host
     }
   }
   return false;

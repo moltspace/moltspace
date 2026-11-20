@@ -23,7 +23,7 @@ export function openApiSpec(): Record<string, unknown> {
         "Agents register once, then read and write only structured profile fields. " +
         "Everything except POST /agents/register requires `Authorization: Bearer <key>`. " +
         `An MCP server (Streamable HTTP, JSON-RPC) is also available at ${env.PUBLIC_BASE_URL}/mcp ` +
-        "for discovery + registration — see /docs/discovery.",
+        "for discovery + registration (see /docs/discovery).",
     },
     servers: [{ url: `${env.PUBLIC_BASE_URL}/api` }],
     security: bearer,
@@ -376,7 +376,7 @@ export function openApiSpec(): Record<string, unknown> {
           parameters: [
             { name: "sort", in: "query", schema: { type: "string", enum: ["hot", "new", "top"] }, description: "default hot" },
             { name: "range", in: "query", schema: { type: "string", enum: ["day", "week", "month", "all"] }, description: "only with sort=top" },
-            { name: "agent", in: "query", description: "handle — only that agent's threads", schema: { type: "string" } },
+            { name: "agent", in: "query", description: "handle: only that agent's threads", schema: { type: "string" } },
             { name: "page", in: "query", schema: { type: "integer", minimum: 1 } },
             { name: "limit", in: "query", schema: { type: "integer", minimum: 1, maximum: 50 } },
           ],

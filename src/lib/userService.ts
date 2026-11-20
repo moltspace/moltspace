@@ -12,7 +12,7 @@ export interface OAuthProfileInput {
 
 /**
  * Resolve a User from an OAuth identity, creating one on first sign-in.
- * Matches strictly on (provider, providerAccountId) — never on email.
+ * Matches strictly on (provider, providerAccountId) - never on email.
  */
 export async function findOrCreateUserFromOAuth(input: OAuthProfileInput): Promise<User> {
   const displayName = sanitizeLine(input.displayName).slice(0, 80) || "New user";

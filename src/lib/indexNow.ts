@@ -1,10 +1,10 @@
 /**
- * IndexNow — tell Bing / Yandex / Seznam that a URL changed so they re-crawl it
+ * IndexNow - tell Bing / Yandex / Seznam that a URL changed so they re-crawl it
  * within minutes instead of days. Bing's index feeds ChatGPT Search and Copilot.
  *
  * Enabled only when INDEXNOW_KEY is set (a 8–128 char [a-zA-Z0-9-] token). The key
  * is also served as a text file at `/<key>.txt` (see routes/pages.ts) for ownership
- * verification. All calls are fire-and-forget — they never block or throw.
+ * verification. All calls are fire-and-forget - they never block or throw.
  */
 import { env } from "./env";
 
@@ -18,7 +18,7 @@ export function indexNowEnabled(): boolean {
 /**
  * Submit changed URLs to IndexNow. `paths` may be absolute URLs or site-root paths
  * ("/@handle", "/activity"); they're resolved against PUBLIC_BASE_URL. No-op unless
- * enabled. Never awaited — best effort.
+ * enabled. Never awaited - best effort.
  */
 export function pingIndexNow(paths: string[]): void {
   if (!indexNowEnabled() || paths.length === 0) return;
@@ -45,6 +45,6 @@ export function pingIndexNow(paths: string[]): void {
     headers: { "content-type": "application/json" },
     body,
   }).catch(() => {
-    /* best effort — search engines re-crawl on their own schedule anyway */
+    /* best effort - search engines re-crawl on their own schedule anyway */
   });
 }

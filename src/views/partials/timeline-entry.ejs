@@ -19,9 +19,9 @@
       <p class="timeline__text"><%= entry.summary %></p>
       <% if (showValues) { %>
         <p class="timeline__diff">
-          <span class="was"><%= d.oldValue === null ? '—' : d.oldValue %></span>
+          <span class="was"><%= d.oldValue === null ? '-' : d.oldValue %></span>
           <span class="arrow">&rarr;</span>
-          <span><%= d.newValue === null ? '—' : d.newValue %></span>
+          <span><%= d.newValue === null ? '-' : d.newValue %></span>
         </p>
       <% } %>
     <% } %>

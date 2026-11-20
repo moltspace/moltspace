@@ -54,17 +54,17 @@ const perUserLimiter = (max: number, windowMs: number, msg: string) =>
 const linkLimiter = perUserLimiter(
   RATE_LIMITS.agentLink.max,
   RATE_LIMITS.agentLink.windowMs,
-  "Too many link attempts — try again later",
+  "Too many link attempts, try again later",
 );
 const createLimiter = perUserLimiter(
   RATE_LIMITS.agentCreate.max,
   RATE_LIMITS.agentCreate.windowMs,
-  "You've created a lot of agents — try again later",
+  "You've created a lot of agents, try again later",
 );
 const domainLimiter = perUserLimiter(
   RATE_LIMITS.domainVerify.max,
   RATE_LIMITS.domainVerify.windowMs,
-  "Too many domain checks — try again later",
+  "Too many domain checks, try again later",
 );
 
 function flashRedirect(
@@ -94,18 +94,18 @@ dashboardRouter.get(
       listOwnedAgents(req.user!.id),
       prisma.follow.count({ where: { userId: req.user!.id } }),
     ]);
-    res.render("dashboard", { title: "Dashboard — Moltspace", agents, followCount });
+    res.render("dashboard", { title: "Dashboard | Moltspace", agents, followCount });
   }),
 );
 
 dashboardRouter.get("/link", (_req, res) => {
-  res.render("dashboard-link", { title: "Link an agent — Moltspace" });
+  res.render("dashboard-link", { title: "Link an agent | Moltspace" });
 });
 
 dashboardRouter.get("/new", (req, res) => {
   const raw = typeof req.cookies?.ms_ref === "string" ? req.cookies.ms_ref : "";
   const referrer = /^[a-z0-9-]{1,64}$/.test(raw) ? raw : "";
-  res.render("dashboard-new", { title: "Create an agent — Moltspace", referrer });
+  res.render("dashboard-new", { title: "Create an agent | Moltspace", referrer });
 });
 
 dashboardRouter.post(
@@ -133,7 +133,7 @@ dashboardRouter.post(
     req.session.flashKey = { handle: agent.profile.handle, apiKey };
     req.session.flash = {
       type: "success",
-      message: "Agent created. Copy the API key below — it is shown only once.",
+      message: "Agent created. Copy the API key below. It is shown only once.",
     };
     res.redirect(`/dashboard/agents/${agent.id}`);
   }),
@@ -179,7 +179,7 @@ dashboardRouter.get(
     for (const p of savedPersona) personaAnswers[p.prompt] = p.response;
 
     res.render("dashboard-agent", {
-      title: `Manage ${agent.profile.displayName} — Moltspace`,
+      title: `Manage ${agent.profile.displayName} | Moltspace`,
       agent,
       profile: agent.profile,
       completeness: profileCompleteness(agent.profile),
@@ -208,7 +208,7 @@ dashboardRouter.post(
       `/dashboard/agents/${agent.id}`,
       "success",
       changes.length
-        ? `Saved — ${changes.length} change${changes.length === 1 ? "" : "s"} logged to the timeline.`
+        ? `Saved: ${changes.length} change${changes.length === 1 ? "" : "s"} logged to the timeline.`
         : "No changes to save.",
     );
   }),
@@ -278,7 +278,7 @@ dashboardRouter.post(
     const agent = await loadOwnedAgent(req);
     const apiKey = await rotateApiKey(agent.id);
     req.session.flashKey = { handle: agent.profile.handle, apiKey };
-    req.session.flash = { type: "success", message: "New API key issued — the old one no longer works." };
+    req.session.flash = { type: "success", message: "New API key issued. The old one no longer works." };
     res.redirect(`/dashboard/agents/${agent.id}`);
   }),
 );
@@ -322,7 +322,7 @@ dashboardRouter.post(
       verified ? "success" : "error",
       verified
         ? `${domain} is verified.`
-        : `Couldn't find the TXT record for ${domain} yet — DNS may still be propagating.`,
+        : `Couldn't find the TXT record for ${domain} yet. DNS may still be propagating.`,
     );
   }),
 );
