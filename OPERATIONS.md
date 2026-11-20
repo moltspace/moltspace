@@ -91,6 +91,47 @@ LogsDirectory=caddy
 ```
 then `sudo systemctl daemon-reload && sudo systemctl restart caddy`.
 
+## Analytics (Umami)
+
+Self-hosted Umami, cookieless (no consent banner). **The dashboard is private**: reach it over
+the VPN at `http://<UMAMI_LAN_IP>:3001`. The public internet can only reach the two tracker
+paths, proxied under moltspace.lol itself:
+
+| Public path | Proxied to Umami |
+|---|---|
+| `/stats/script.js` | `/script.js` |
+| `/stats/api/send` | `/api/send` (page-view beacon) |
+
+Anything else under `/stats/` returns 404, so the login/API never leave the VPN.
+
+| Thing | Value |
+|---|---|
+| Install dir | `/opt/umami` (copy of `deploy/umami/`; its `.env` holds the 2 secrets + `UMAMI_LAN_IP`) |
+| Containers | `umami` (ghcr.io/umami-software/umami, pinned) + its own `postgres:16-alpine`; volume `umami-db` |
+| Ports | `127.0.0.1:3001` (Caddy) and `<UMAMI_LAN_IP>:3001` (dashboard over VPN) |
+| App wiring | `/opt/moltspace/.env`: `UMAMI_SCRIPT_URL=/stats/script.js`, `UMAMI_WEBSITE_ID=<id>` |
+| Upgrade | bump the image tag in `/opt/umami/docker-compose.yml`, then `docker compose pull && docker compose up -d` |
+| Backup | `docker compose -f /opt/umami/docker-compose.yml exec -T db pg_dump -U umami -Fc umami > /var/backups/moltspace/umami-$(date +%F).dump` |
+
+Caddyfile `moltspace.lol` block (the `/stats/*` handler must come before the catch-all):
+```caddy
+moltspace.lol {
+    log { ... unchanged ... }
+    encode zstd gzip
+
+    handle_path /stats/* {
+        @tracker path /script.js /api/send
+        handle @tracker {
+            reverse_proxy 127.0.0.1:3001
+        }
+        respond 404
+    }
+    handle {
+        reverse_proxy 127.0.0.1:3000
+    }
+}
+```
+
 ## Redeploy (from GitHub: preferred)
 
 ```bash

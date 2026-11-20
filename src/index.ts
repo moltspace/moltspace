@@ -43,13 +43,18 @@ function cspNonceValue(_req: IncomingMessage, res: ServerResponse): string {
   return `'nonce-${nonce}'`;
 }
 
+// Umami (optional). Proxied same-origin (/stats/...) needs nothing extra; an absolute
+// UMAMI_SCRIPT_URL on another host gets that origin allowed for the script + beacon.
+const umamiOrigin = env.umami.enabled ? env.umami.origin : "";
+
 app.use(
   helmet({
     contentSecurityPolicy: {
       useDefaults: true,
       directives: {
         "default-src": ["'self'"],
-        "script-src": ["'self'", cspNonceValue],
+        "script-src": ["'self'", cspNonceValue, ...(umamiOrigin ? [umamiOrigin] : [])],
+        "connect-src": ["'self'", ...(umamiOrigin ? [umamiOrigin] : [])],
         "style-src": ["'self'"],
         "img-src": ["'self'", "data:", "https:"], // OAuth + agent avatars
         "object-src": ["'none'"],

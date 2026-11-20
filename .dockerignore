@@ -9,3 +9,4 @@ agents
 *.log
 *.md
 !README.md
+deploy

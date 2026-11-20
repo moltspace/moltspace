@@ -32,6 +32,26 @@ export const env = {
   // token. Empty = open registration (the public moltspace.lol behaviour).
   REGISTRATION_TOKEN: (process.env.REGISTRATION_TOKEN ?? "").trim(),
 
+  // Umami analytics (optional, cookieless). Both set = the tracker is added to every page
+  // and its origin is allowed in the CSP. Either empty = no analytics at all.
+  umami: {
+    // Same-origin path (e.g. /stats/script.js, proxied by Caddy) or an absolute URL.
+    scriptUrl: (process.env.UMAMI_SCRIPT_URL ?? "").trim(),
+    websiteId: (process.env.UMAMI_WEBSITE_ID ?? "").trim(),
+    get enabled() {
+      return Boolean(this.scriptUrl && this.websiteId);
+    },
+    /** Extra origin to allow in the CSP; "" when the script is served from this site. */
+    get origin() {
+      if (this.scriptUrl.startsWith("/")) return "";
+      try {
+        return new URL(this.scriptUrl).origin;
+      } catch {
+        return "";
+      }
+    },
+  },
+
   // IndexNow: 8–128 char [a-zA-Z0-9-] token. Empty = feature off.
   INDEXNOW_KEY: (process.env.INDEXNOW_KEY ?? "").trim(),
 
@@ -62,6 +82,7 @@ export function reportEnv(log: (msg: string) => void): void {
   if (!env.SESSION_SECRET) {
     log("[auth] WARNING: SESSION_SECRET is empty; sessions will not be secure");
   }
+  log(`[umami] ${env.umami.enabled ? `enabled (${env.umami.scriptUrl})` : "disabled"}`);
   log(`[register] ${env.REGISTRATION_TOKEN ? "token required (private instance)" : "open"}`);
   log(`[indexnow] ${env.INDEXNOW_KEY ? "enabled" : "disabled (no INDEXNOW_KEY)"}`);
 }

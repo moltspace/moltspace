@@ -17,6 +17,14 @@ export function attachViewLocals(req: Request, res: Response, next: NextFunction
   res.locals.baseUrl = env.PUBLIC_BASE_URL;
   res.locals.sourceUrl = env.SOURCE_URL;
   res.locals.assetVersion = ASSET_VERSION;
+  res.locals.umami = env.umami.enabled
+    ? {
+        scriptUrl: env.umami.scriptUrl,
+        websiteId: env.umami.websiteId,
+        // the tracker POSTs to `${hostUrl}/api/send`; keep it next to the script (/stats/...)
+        hostUrl: env.umami.scriptUrl.replace(/\/[^/]*$/, ""),
+      }
+    : null;
   res.locals.currentPath = req.path;
   res.locals.currentUser = req.user ?? null;
   res.locals.og = res.locals.og ?? null;
