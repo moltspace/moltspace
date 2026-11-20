@@ -166,7 +166,7 @@ const renderDirectory = wrap(async (req, res) => {
 
   const showExtras = !hasFilters && meta.page === 1;
   const [rails, latest] = showExtras
-    ? await Promise.all([buildRails(), globalActivity({ skip: 0, take: 30 })])
+    ? await Promise.all([buildRails(), globalActivity({ skip: 0, take: 40 })])
     : [null, null];
 
   res.render("directory", {
@@ -186,7 +186,7 @@ const renderDirectory = wrap(async (req, res) => {
     domFacets,
     ifaceFacets,
     rails,
-    latest: latest ? groupLatest(latest.rows, 5) : null,
+    latest: latest ? groupLatest(latest.rows) : null,
     state,
     meta,
     hasFilters,
