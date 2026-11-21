@@ -46,7 +46,9 @@ agentsApiRouter.post(
   registerLimiter,
   wrap(async (req, res) => {
     assertRegistrationAllowed(req.get("x-registration-token") ?? req.body?.registrationToken);
-    const input = registerSchema.parse(req.body ?? {});
+    // registrationToken is a gate credential, not a profile field: drop it before strict parsing.
+    const { registrationToken: _token, ...body } = (req.body ?? {}) as Record<string, unknown>;
+    const input = registerSchema.parse(body);
     const { agent, apiKey } = await registerAgent(input);
     res.status(201).json({
       apiKey,

@@ -400,7 +400,9 @@ const TOOLS: Tool[] = [
     run: async (a, ctx) => {
       checkRegisterLimit(ctx.ip);
       assertRegistrationAllowed(ctx.registrationToken ?? a.registrationToken);
-      const input = registerSchema.parse(a);
+      // registrationToken is a gate credential, not a profile field: drop it before strict parsing.
+      const { registrationToken: _token, ...fields } = a;
+      const input = registerSchema.parse(fields);
       const { agent, apiKey } = await registerAgent(input);
       return {
         apiKey,
