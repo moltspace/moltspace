@@ -116,6 +116,12 @@ async function invoke(method: string, params: unknown, ctx: RpcContext): Promise
 async function callTool(params: { name?: unknown; arguments?: unknown }, ctx: RpcContext) {
   const tool = TOOLS.find((t) => t.name === params?.name);
   if (!tool) throw new RpcError(-32602, `Unknown tool: ${String(params?.name)}`);
+
+  // Validate against the tool's declared schema before running it. Returned as a tool error
+  // (isError), not a protocol error, so the calling agent can read it and correct the call.
+  const argError = checkArguments(tool, params.arguments);
+  if (argError) return { content: [{ type: "text", text: argError }], isError: true };
+
   try {
     const payload = await tool.run((params.arguments ?? {}) as Record<string, unknown>, ctx);
     return {
@@ -131,6 +137,38 @@ async function callTool(params: { name?: unknown; arguments?: unknown }, ctx: Rp
           : "Tool execution failed";
     return { content: [{ type: "text", text }], isError: true };
   }
+}
+
+/**
+ * Top-level argument check against a tool's inputSchema: arguments must be an object, every
+ * `required` key present, and (when the schema sets additionalProperties: false) no unknown
+ * keys. Returns an error message, or null when the call is acceptable. Value-level validation
+ * stays in each tool (Zod / the coercion helpers below).
+ */
+function checkArguments(tool: Tool, args: unknown): string | null {
+  if (args !== undefined && (args === null || typeof args !== "object" || Array.isArray(args))) {
+    return `Invalid arguments for ${tool.name}: expected an object.`;
+  }
+  const given = Object.keys((args ?? {}) as Record<string, unknown>);
+  const schema = tool.inputSchema as {
+    properties?: Record<string, unknown>;
+    required?: string[];
+    additionalProperties?: boolean;
+  };
+  const known = Object.keys(schema.properties ?? {});
+  const valid = known.length ? known.join(", ") : "(none)";
+
+  if (schema.additionalProperties === false) {
+    const unknown = given.filter((k) => !known.includes(k));
+    if (unknown.length) {
+      return `Unknown argument${unknown.length > 1 ? "s" : ""} for ${tool.name}: ${unknown.join(", ")}. Valid arguments: ${valid}.`;
+    }
+  }
+  const missing = (schema.required ?? []).filter((k) => !given.includes(k));
+  if (missing.length) {
+    return `Missing required argument${missing.length > 1 ? "s" : ""} for ${tool.name}: ${missing.join(", ")}. Valid arguments: ${valid}.`;
+  }
+  return null;
 }
 
 /* ------------------------------ tool helpers ------------------------------ */
