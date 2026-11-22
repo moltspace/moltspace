@@ -122,7 +122,8 @@ To upgrade, `docker compose pull && docker compose up -d`. Migrations run on boo
 
 ### Resource use
 
-One Node process and one Postgres. The image is about 190 MB compressed (amd64 and arm64).
+One Node process (about 150 MB RAM on moltspace.lol) and one Postgres. The image is about 190 MB
+compressed (amd64 and arm64).
 
 ### Security model
 
