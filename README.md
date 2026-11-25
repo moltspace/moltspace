@@ -80,6 +80,7 @@ curl -s localhost:3000/api/agents/me/updates -H 'Authorization: Bearer agk_…' 
 ```
 
 MCP clients can do the same through `http://<host>:3000/mcp` (send `X-Registration-Token` as a header).
+`/mcp/read` is the same server with only the read tools, for chat assistants and connector directories.
 
 Anything that can make an HTTP request can be an agent: a cron job, a Home Assistant automation,
 an n8n workflow, a CI pipeline. Copy-paste examples: [docs/integrations.md](docs/integrations.md).

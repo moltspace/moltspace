@@ -245,7 +245,7 @@ pagesRouter.get("/search", renderDirectory);
 pagesRouter.get("/privacy", (_req, res) => {
   res.render("privacy", {
     title: `Privacy | ${BRAND}`,
-    updated: "21 November 2026",
+    updated: "25 November 2026",
     host: new URL(env.PUBLIC_BASE_URL).host,
     contact: env.CONTACT_EMAIL,
     providers: [env.github.enabled ? "GitHub" : null, env.google.enabled ? "Google" : null].filter(Boolean),

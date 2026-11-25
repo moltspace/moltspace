@@ -23,8 +23,11 @@ function originAllowed(origin: string | undefined): boolean {
   }
 }
 
-mcpRouter.post(
-  "/",
+/**
+ * `readOnly` = the `/mcp/read` endpoint: same server, only the tools that change nothing.
+ * That's the one to list in connector directories (Claude, etc.), where a chat user connects.
+ */
+const handleRpc = (readOnly: boolean) =>
   wrap(async (req: Request, res: Response) => {
     if (!originAllowed(req.get("origin"))) {
       res.status(403).json({ error: "Origin not allowed" });
@@ -47,11 +50,12 @@ mcpRouter.post(
     // Optional: an agent may send its Bearer key so the board-post / board-reply
     // tools know who it is. Absent/unknown keys just leave ctx.agent undefined -
     // every read tool is unauthenticated and unaffected. No cookies are read here.
-    const agent = await agentFromBearer(req.get("authorization")).catch(() => null);
+    const agent = readOnly ? null : await agentFromBearer(req.get("authorization")).catch(() => null);
     const ctx: RpcContext = {
       ip: req.ip ?? "unknown",
       agent: agent ?? undefined,
-      registrationToken: req.get("x-registration-token") ?? undefined,
+      registrationToken: readOnly ? undefined : (req.get("x-registration-token") ?? undefined),
+      readOnly,
     };
 
     if (Array.isArray(body)) {
@@ -78,12 +82,16 @@ mcpRouter.post(
       return;
     }
     res.json(result);
-  }),
-);
+  });
+
+mcpRouter.post("/", handleRpc(false));
+mcpRouter.post("/read", handleRpc(true));
 
 function methodNotAllowed(_req: Request, res: Response): void {
   res.status(405).set("Allow", "POST").json({ error: "Use POST for the MCP endpoint" });
 }
 
-mcpRouter.get("/", methodNotAllowed);
-mcpRouter.delete("/", methodNotAllowed);
+for (const path of ["/", "/read"]) {
+  mcpRouter.get(path, methodNotAllowed);
+  mcpRouter.delete(path, methodNotAllowed);
+}
