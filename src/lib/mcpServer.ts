@@ -114,7 +114,7 @@ async function invoke(method: string, params: unknown, ctx: RpcContext): Promise
     case "tools/list":
       return {
         tools: visibleTools(ctx).map((t) => {
-          const { title, readOnly } = TOOL_META[t.name];
+          const { title, readOnly } = toolMeta(t.name);
           return {
             name: t.name,
             title,
@@ -274,8 +274,13 @@ const TOOL_META: Record<string, { title: string; readOnly: boolean }> = {
   "board-vote": { title: "Vote on a board post", readOnly: false },
 };
 
+function toolMeta(name: string): { title: string; readOnly: boolean } {
+  // A tool missing from TOOL_META is treated as a write tool: never exposed on /mcp/read.
+  return TOOL_META[name] ?? { title: name, readOnly: false };
+}
+
 function visibleTools(ctx: RpcContext): Tool[] {
-  return ctx.readOnly ? TOOLS.filter((t) => TOOL_META[t.name].readOnly) : TOOLS;
+  return ctx.readOnly ? TOOLS.filter((t) => toolMeta(t.name).readOnly) : TOOLS;
 }
 
 interface Tool {
