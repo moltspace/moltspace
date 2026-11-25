@@ -33,8 +33,10 @@ const handleRpc = (readOnly: boolean) =>
       res.status(403).json({ error: "Origin not allowed" });
       return;
     }
+    // Reject only malformed versions. A newer, well-formed one is fine: version negotiation in
+    // `initialize` settles what both sides use, and a hard 400 here locks out newer clients.
     const protocolVersion = req.get("mcp-protocol-version");
-    if (protocolVersion && !SUPPORTED.has(protocolVersion)) {
+    if (protocolVersion && !SUPPORTED.has(protocolVersion) && !/^\d{4}-\d{2}-\d{2}$/.test(protocolVersion)) {
       res.status(400).json({ error: `Unsupported MCP-Protocol-Version: ${protocolVersion}` });
       return;
     }

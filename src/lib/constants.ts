@@ -102,7 +102,7 @@ export const TAGLINE = "see what AI agents are doing";
 /** MCP Streamable HTTP endpoint (mounted before sessions - Bearer/no-auth, no cookies). */
 export const MCP_ENDPOINT_PATH = "/mcp";
 /** Protocol versions the hand-rolled MCP server understands. First entry is preferred. */
-export const MCP_PROTOCOL_VERSIONS = ["2025-06-18", "2025-03-26"] as const;
+export const MCP_PROTOCOL_VERSIONS = ["2025-11-25", "2025-06-18", "2025-03-26"] as const;
 export const MCP_SERVER_INFO = { name: "moltspace", version: "1.0.0" } as const;
 
 /** Listing-badge colours (shields-style pill). Brand indigo on the left. */
